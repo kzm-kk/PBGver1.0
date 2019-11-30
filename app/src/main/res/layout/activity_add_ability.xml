@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddAbility">
+
+    <include layout="@layout/layout_additionbuttons" android:id="@+id/buttons3"/>
+
+    <TextView
+        android:id="@+id/thiswindow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/limitmessage3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="24dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/thiswindow3" />
+
+    <EditText
+        android:id="@+id/abilityname"
+        android:layout_width="112dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="技の名前"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/thiswindow3" />
+
+    <EditText
+        android:id="@+id/usempnum"
+        android:layout_width="73dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="消費MP"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/abilityname" />
+
+
+    <EditText
+        android:id="@+id/turnnum"
+        android:layout_width="119dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="持続ターン数"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/powersp" />
+
+
+    <TextView
+        android:id="@+id/powertext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="威力"
+        app:layout_constraintEnd_toStartOf="@+id/powersp"
+        app:layout_constraintTop_toBottomOf="@+id/usempnum" />
+
+    <TextView
+        android:id="@+id/typetext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="技の分類"
+        app:layout_constraintEnd_toStartOf="@+id/typesp"
+        app:layout_constraintTop_toBottomOf="@+id/turnnum" />
+
+    <TextView
+        android:id="@+id/targettext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="効果対象"
+        app:layout_constraintEnd_toStartOf="@+id/targetsp"
+        app:layout_constraintTop_toBottomOf="@+id/typesp" />
+
+    <Spinner
+        android:id="@+id/powersp"
+        android:layout_width="119dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/power"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usempnum" />
+
+    <Spinner
+        android:id="@+id/typesp"
+        android:layout_width="143dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/abilitytype"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/turnnum" />
+
+    <Spinner
+        android:id="@+id/targetsp"
+        android:layout_width="113dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/target"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typesp" />
+
+    <TextView
+        android:id="@+id/elementtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="属性"
+        app:layout_constraintEnd_toStartOf="@+id/elementsp"
+        app:layout_constraintTop_toBottomOf="@+id/targetsp" />
+
+    <Spinner
+        android:id="@+id/elementsp"
+        android:layout_width="113dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/element"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/targetsp" />
+
+
+</android.support.constraint.ConstraintLayout>

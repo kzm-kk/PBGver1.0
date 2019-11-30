@@ -1,0 +1,131 @@
+<resources>
+    <string name="app_name">PartyBattleGame</string>
+    <string-array name="level">
+        <item>レベル選択</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="specialty">
+        <item>近距離</item>
+        <item>遠距離</item>
+        <item>両方</item>
+    </string-array>
+    <string-array name="PandM">
+        <item>HP</item>
+        <item>MP</item>
+        <item>攻撃</item>
+        <item>魔攻</item>
+        <item>防御</item>
+        <item>魔防</item>
+        <item>速さ</item>
+        <item>命中</item>
+        <item>回避</item>
+    </string-array>
+    <string-array name="abilitytype">
+        <item>直接攻撃</item>
+        <item>遠距離攻撃</item>
+        <item>魔法</item>
+        <item>攻撃上昇</item>
+        <item>魔攻上昇</item>
+        <item>防御上昇</item>
+        <item>魔防上昇</item>
+        <item>速さ上昇</item>
+        <item>命中上昇</item>
+        <item>回避上昇</item>
+        <item>攻撃下降</item>
+        <item>魔攻下降</item>
+        <item>防御下降</item>
+        <item>魔防下降</item>
+        <item>速さ下降</item>
+        <item>命中下降</item>
+        <item>回避下降</item>
+        <item>HP回復</item>
+        <item>MP回復</item>
+        <item>異常回復</item>
+        <item>蘇生</item>
+        <item>拘束付加</item>
+        <item>毒付加</item>
+    </string-array>
+    <string-array name="power">
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+        <item>35</item>
+        <item>40</item>
+        <item>45</item>
+        <item>50</item>
+        <item>55</item>
+        <item>60</item>
+        <item>65</item>
+        <item>70</item>
+        <item>75</item>
+        <item>80</item>
+        <item>85</item>
+        <item>90</item>
+        <item>95</item>
+        <item>100</item>
+        <item>105</item>
+        <item>110</item>
+        <item>115</item>
+        <item>120</item>
+        <item>125</item>
+        <item>130</item>
+        <item>135</item>
+        <item>140</item>
+        <item>145</item>
+        <item>150</item>
+    </string-array>
+    <string-array name="target">
+        <item>敵単体</item>
+        <item>敵全体</item>
+        <item>自分</item>
+        <item>味方単体</item>
+        <item>味方全体</item>
+    </string-array>
+    <string-array name="element">
+        <item>炎</item>
+        <item>氷</item>
+        <item>雷</item>
+        <item>水</item>
+        <item>風</item>
+        <item>地</item>
+        <item>光</item>
+        <item>闇</item>
+        <item>なし/無</item>
+    </string-array>
+    <string-array name="CorA">
+        <item>キャラ削除</item>
+        <item>アビリティ削除</item>
+    </string-array>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_image_selection_demo">Image Selection Demo</string>
+
+    <string name="image">image</string>
+    <string name="select_image">画像を選択する</string>
+    <string name="image_unselected_message">画像が選択されませんでした</string>
+    <string name="permissions_not_granted">権限は許可されていません</string>
+    <string name="crop_image_failure_message">画像がcropされませんでした</string>
+    <string name="title_activity_image_selection_crop_demo">画像cropデモ</string>
+    <string name="title_activity_gray_scale">GrayScaleActivity</string>
+
+    <string name="image_filter_dialog_fragment_title">GrayScaleMethodDialog</string>
+    <string name="image_filter_selected_msg">%1$s was selected.</string>
+
+    <string name="title_activity_gray_scale_demo">Image GrayScale Demo</string>
+    <string name="title_activity_exif_demo">Exif Demo</string>
+    <string name="title_activity_exif">ExifActivity</string>
+    <string name="title_activity_exoplayer2">Exoplayer2Activity</string>
+    <string name="title_activity_image_decoder">ImageDecoderActivity</string>
+</resources>

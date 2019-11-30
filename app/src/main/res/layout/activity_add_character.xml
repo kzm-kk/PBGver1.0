@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddCharacter">
+
+    <include layout="@layout/layout_additionbuttons" android:id="@+id/buttons1"/>
+
+    <LinearLayout
+        android:id="@+id/charalayout"
+        android:layout_width="141dp"
+        android:layout_height="141dp"
+        android:layout_marginTop="36dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+
+    <TextView
+        android:id="@+id/thiswindow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/limitmessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="44dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/decideimage"
+        app:layout_constraintTop_toBottomOf="@+id/specialtysp" />
+
+    <Button
+        android:id="@+id/decideimage"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="画像選択"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/charalayout" />
+
+    <EditText
+        android:id="@+id/fullname"
+        android:layout_width="166dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="476dp"
+        android:ems="10"
+        android:hint="フルネーム"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/charalayout"
+        app:layout_constraintTop_toBottomOf="@+id/thiswindow" />
+
+    <EditText
+        android:id="@+id/viewname"
+        android:layout_width="117dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="ニックネーム"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/charalayout"
+        app:layout_constraintTop_toBottomOf="@+id/fullname" />
+
+    <EditText
+        android:id="@+id/level"
+        android:layout_width="50dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:hint="Lv"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toTopOf="@+id/viewname" />
+
+    <EditText
+        android:id="@+id/HPnum"
+        android:layout_width="50dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:ems="10"
+        android:hint="HP"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/level" />
+
+    <EditText
+        android:id="@+id/MPnum"
+        android:layout_width="50dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:ems="10"
+        android:hint="MP"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/HPnum" />
+
+    <EditText
+        android:id="@+id/ATKnum"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:ems="10"
+        android:hint="攻撃"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/MPnum" />
+
+    <EditText
+        android:id="@+id/MTKnum"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:ems="10"
+        android:hint="魔攻"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/ATKnum" />
+
+    <EditText
+        android:id="@+id/DEFnum"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:ems="10"
+        android:hint="防御"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/MTKnum" />
+
+    <EditText
+        android:id="@+id/MEFnum"
+        android:layout_width="65dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:ems="10"
+        android:hint="魔防"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/DEFnum" />
+
+    <EditText
+        android:id="@+id/SPDnum"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:hint="速さ"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/MEFnum" />
+
+    <EditText
+        android:id="@+id/ACCnum"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:hint="命中"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/SPDnum" />
+
+    <EditText
+        android:id="@+id/EVAnum"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:hint="回避"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/ACCnum" />
+
+    <TextView
+        android:id="@+id/specialtytext"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_marginStart="8dp"
+        android:text="得意な距離"
+        app:layout_constraintStart_toStartOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/twicesp" />
+
+    <Spinner
+        android:id="@+id/specialtysp"
+        android:layout_width="115dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/specialty"
+        app:layout_constraintStart_toStartOf="@+id/viewname"
+        app:layout_constraintTop_toBottomOf="@+id/specialtytext" />
+
+    <TextView
+        android:id="@+id/cuttext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="半減"
+        app:layout_constraintStart_toEndOf="@+id/charalayout"
+        app:layout_constraintTop_toBottomOf="@+id/viewname" />
+
+    <Spinner
+        android:id="@+id/cutsp"
+        android:layout_width="88dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/element"
+        app:layout_constraintStart_toEndOf="@+id/charalayout"
+        app:layout_constraintTop_toBottomOf="@+id/cuttext" />
+
+    <TextView
+        android:id="@+id/twicetext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="弱点"
+        app:layout_constraintStart_toEndOf="@+id/charalayout"
+        app:layout_constraintTop_toBottomOf="@+id/cutsp" />
+
+    <Spinner
+        android:id="@+id/twicesp"
+        android:layout_width="88dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/element"
+        app:layout_constraintStart_toEndOf="@+id/charalayout"
+        app:layout_constraintTop_toBottomOf="@+id/twicetext" />
+
+
+</android.support.constraint.ConstraintLayout>

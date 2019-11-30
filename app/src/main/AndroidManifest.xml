@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.kzm.partybattlegame">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/icon_square"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/icon_round"
+        android:sharedUserId="kzm.contents"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:name=".Commons">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".BattleActivity" />
+        <activity android:name=".CharaSelect" />
+        <activity android:name=".Continue" />
+        <activity android:name=".AttackContents" />
+        <activity android:name=".AddCharacter" />
+        <activity android:name=".AddGrows" />
+        <activity android:name=".ExplainActivity" />
+        <activity android:name=".Two_Choices" />
+        <activity android:name=".AddAbility" />
+        <activity android:name=".OptionActivity" />
+        <activity android:name=".CheckActivity" />
+        <activity android:name=".CreditActivity" />
+        <activity android:name=".AddLearning" />
+        <activity android:name=".RemoveActivity"></activity>
+    </application>
+
+</manifest>

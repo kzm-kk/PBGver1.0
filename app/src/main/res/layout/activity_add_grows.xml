@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddGrows">
+
+    <include layout="@layout/layout_additionbuttons" android:id="@+id/buttons2"/>
+
+    <TextView
+        android:id="@+id/thiswindow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/limitmessage2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MPnumgrow" />
+
+    <EditText
+        android:id="@+id/HPnumgrow"
+        android:layout_width="86dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="HP(伸び)"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/MPnumgrow"
+        android:layout_width="86dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="252dp"
+        android:ems="10"
+        android:hint="MP(伸び)"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HPnumgrow" />
+
+
+    <EditText
+        android:id="@+id/ATKnumgrow"
+        android:layout_width="93dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:ems="10"
+        android:hint="攻撃(伸び)"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MPnumgrow" />
+
+    <EditText
+        android:id="@+id/MTKnumgrow"
+        android:layout_width="93dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:ems="10"
+        android:hint="魔攻(伸び)"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ATKnumgrow" />
+
+    <EditText
+        android:id="@+id/DEFnumgrow"
+        android:layout_width="93dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:ems="10"
+        android:hint="防御(伸び)"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MTKnumgrow" />
+
+    <EditText
+        android:id="@+id/MEFnumgrow"
+        android:layout_width="93dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:ems="10"
+        android:hint="魔防(伸び)"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DEFnumgrow" />
+
+    <EditText
+        android:id="@+id/SPDnumgrow"
+        android:layout_width="93dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:ems="10"
+        android:hint="速さ(伸び)"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MEFnumgrow" />
+
+    <EditText
+        android:id="@+id/ACCnumgrow"
+        android:layout_width="93dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:ems="10"
+        android:hint="命中(伸び)"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SPDnumgrow" />
+
+    <EditText
+        android:id="@+id/EVAnumgrow"
+        android:layout_width="93dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="252dp"
+        android:ems="10"
+        android:hint="回避(伸び)"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ACCnumgrow" />
+
+    <TextView
+        android:id="@+id/plustext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="プラス補正能力"
+        app:layout_constraintEnd_toStartOf="@+id/plussp"
+        app:layout_constraintTop_toBottomOf="@+id/EVAnumgrow" />
+
+    <TextView
+        android:id="@+id/minustext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:text="マイナス補正能力"
+        app:layout_constraintEnd_toStartOf="@+id/minussp"
+        app:layout_constraintTop_toBottomOf="@+id/plustext" />
+
+    <Spinner
+        android:id="@+id/plussp"
+        android:layout_width="113dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="252dp"
+        android:entries="@array/PandM"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EVAnumgrow" />
+
+    <Spinner
+        android:id="@+id/minussp"
+        android:layout_width="113dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/PandM"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/plussp" />
+
+
+</android.support.constraint.ConstraintLayout>
