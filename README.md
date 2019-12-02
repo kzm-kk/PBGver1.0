@@ -1,2 +1,2 @@
-# PBGver1.0
-application:"Party Battle Game" version1.0
+# PartyBattleGame
+application:"Party Battle Game" latest release version(ver1.0)
