@@ -1,14 +1,15 @@
 package com.example.kzm.partybattlegame;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.AppLaunchChecker;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -25,17 +26,18 @@ public class MainActivity extends AppCompatActivity {
     String specialty[]=new String[4],resist[]=new String[4];
     int lock=1,maxlock=1,stage;
     int chara[]=new int[4],Lv[]=new int[4];
-    int HP[]=new int[4],MP[]=new int[4];
+    int HPMAX[]=new int[4],MPMAX[]=new int[4];
     int exp[]=new int[4],explimit[]=new int[4];
     int n,k,plv=1,explus=0,expin,all;
+    double HP[]=new double[4],MP[]=new double[4];
     double atk[]=new double[4],mtk[]=new double[4];
     double def[]=new double[4],mef[]=new double[4];
     double spd[]=new double[4],acc[]=new double[4],eva[]=new double[4];
     double pHP,pMP,patk,pmtk,pdef,pmef,pspd,pacc,peva,expchange,expmul=1.2;
-    boolean charaset[]=new boolean[4],next;
+    boolean charaset[]={false,false,false,false},next;
     TextView tv,tv2,tv3;
     Button bt,bt2,bt3,bt4,bt5;
-    LinearLayout layout;
+    LinearLayout layout,Hlayout;
     Intent i;
     MyOpenHelper hp;
     SQLiteDatabase db;
@@ -46,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     byte[] bytegazo = bos.toByteArray();
     private MainView myView;
-    private Commons commons;
+    Commons commons;
+    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         hp = new MyOpenHelper(this);
         db = hp.getWritableDatabase();
-        myView = findViewById(R.id.back1).findViewById(R.id.view);
         commons = (Commons) getApplication();
-        commons.init(myView);
         if(AppLaunchChecker.hasStartedFromLauncher(this)){
             c = db.query("lastplay", new String[]{"one", "two", "three", "four", "level","chara"}, null, null, null, null, null);
             next = c.moveToFirst();
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 next = c.moveToNext();
             }
             for (k = 0; k < 4; k++) {
+                charaset[k]=false;
                 lastdataset(k);
             }
             c.close();
@@ -87,10 +89,14 @@ public class MainActivity extends AppCompatActivity {
                 chara[k]=-1*(k+1);
                 charaset[k]=false;
             }
-            message="『パーティー編成』ボタンを押して\nパーティーを編成してください";
+            message="『キャラ色々』ボタンを押して\nパーティーを編成してください";
         }
         AppLaunchChecker.onActivityCreate(this);
+        myView = findViewById(R.id.back1).findViewById(R.id.view);
+        commons.backinit(myView);
+        commons.makebutton();
         layout=findViewById(R.id.message2);
+        Hlayout=findViewById(R.id.status);
         stage=0;
         sp = (Spinner) findViewById(R.id.levelselect);
         tv = (TextView)findViewById(R.id.levelshow);
@@ -103,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         bt.setText("バトル開始");
         bt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                if(commons.charaset[0])commons.datareception(chara, name, viewname, Lv, HP, MP, atk, mtk, def, mef, spd, acc, eva, specialty, resist, exp, explimit, charaset);
                 if(charaset[0]) {
                     lock = sp.getSelectedItemPosition();
                     if(maxlock<lock) {
@@ -112,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         if(lock>0) {
                             i = new Intent(MainActivity.this, BattleActivity.class);
+
                             setintentdata();
                             Toast.makeText(MainActivity.this,
                                     "レベル" + lock + "のステージへ向かいます",
@@ -123,126 +131,103 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bt2 = (Button) findViewById(R.id.partyset);
-        bt2.setText("パーティー編成");
+        bt2 = (Button) findViewById(R.id.savebutton);
+        bt2.setText("セーブ");
         bt2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                i = new Intent(MainActivity.this, CharaSelect.class);
-                i.putExtra("set",charaset);
-                i.putExtra("allchara",all);
-                i.putExtra("expmul", expmul);
-                startActivityForResult(i, 0);
+                if(commons.charaset[0])tv2.setText("ok "+commons.chara[0]+" "+chara[0]);
             }
         });
-
-        bt3 = (Button) findViewById(R.id.savebutton);
-        bt3.setText("セーブ");
+        bt3 = (Button) findViewById(R.id.statusbutton);
+        bt3.setText("ステータス");
         bt3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                save();
-            }
-        });
-        bt4 = (Button) findViewById(R.id.statusbutton);
-        bt4.setText("ステータス");
-        bt4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
+                if(commons.charaset[0])commons.datareception(chara, name, viewname, Lv, HP, MP, atk, mtk, def, mef, spd, acc, eva, specialty, resist, exp, explimit, charaset);
                 layout.removeAllViews();
+                Hlayout.removeAllViews();
                 if(charaset[0]==false) {
                     tv3 = new TextView(MainActivity.this);
                     tv3.setText("パーティーがセットされていません");
                     tv3.setGravity(Gravity.CENTER);
                     layout.addView(tv3);
                 } else {
+                    tv3 = new TextView(MainActivity.this);
+                    tv3.setText("     ");
+                    tv3.setGravity(Gravity.CENTER);
+                    Hlayout.addView(tv3);
                     for(k=0;k<4;k++) {
                         if(charaset[k]){
                             tv3 = new TextView(MainActivity.this);
-                            tv3.setText(name[k] + " Lv" + Lv[k] + " EXP " + exp[k] + "/" + explimit[k]
-                                    +"\nHP:" + HP[k] + " MP:" + MP[k] + " 攻撃:" + (int)atk[k] + " 魔攻:" + (int)mtk[k] + " 防御:" + (int)def[k]
-                                    + "\n魔防:" + (int)mef[k] + " 速さ:" + (int)spd[k] + " 命中:" + (int)acc[k] + " 回避:" + (int)eva[k] + "\n");
+                            tv3.setText(viewname[k] + "\nLv" + Lv[k] +"\nHP:" + (int)HP[k] + "\nMP:" + (int)MP[k]
+                                    + "\n攻撃:" + (int)atk[k] + "\n魔攻:" + (int)mtk[k] + "\n防御:" + (int)def[k]
+                                    + "\n魔防:" + (int)mef[k] + "\n速さ:" + (int)spd[k] + "\n命中:" + (int)acc[k]
+                                    + "\n回避:" + (int)eva[k] + "\nEXP " + exp[k] + "/" + explimit[k]);
                             tv3.setGravity(Gravity.CENTER);
-                            layout.addView(tv3);
+                            Hlayout.addView(tv3);
                         }
                     }
                 }
             }
         });
-        bt5 = (Button) findViewById(R.id.option);
-        bt5.setText("オプション");
-        bt5.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                i = new Intent(MainActivity.this, OptionActivity.class);
-                lock=maxlock;
-                setintentdata();
-                i.putExtra("name",name);
-                startActivity(i);
-            }
-        });
+        Button bty =findViewById(R.id.back1).findViewById(R.id.battle);
+        bt4 =findViewById(R.id.back1).findViewById(R.id.characters);
+        bt4.setOnClickListener(commons.MC);
+        Button btz =findViewById(R.id.back1).findViewById(R.id.additions);
+        btz.setOnClickListener(commons.MA);
+        bt5 = findViewById(R.id.back1).findViewById(R.id.options);
+        bt5.setOnClickListener(commons.MO);
     }
 
     @Override
     protected void onNewIntent(Intent intent){
         this.setIntent(intent);
-        boolean removeflag = intent.getBooleanExtra("remove",false);
-        if(removeflag)getintentdata(intent);
         stage=0;
         maxlock = Math.max(maxlock,intent.getIntExtra("level", 1));
         tv.setText("レベルセレクト 現在の最高レベル:"+maxlock);
         tv2.setText("");
         charaset = intent.getBooleanArrayExtra("set");
         explus = intent.getIntExtra("explus", 0);
-        levelup();
+        boolean battle = intent.getBooleanExtra("battle",false);
+        if(battle)levelup();
+        if(intent.getBooleanExtra("movemain",false)){
+            commons.datareception(chara, name, viewname, Lv, HP, MP, atk, mtk, def, mef, spd, acc, eva, specialty, resist, exp, explimit, charaset);
+            all = commons.getall();
+        }
         save();
     }
 
     protected void onResume(){
         super.onResume();
         if(charaset[0]) save();
+        //commons.datareception(chara, name, viewname, Lv, HP, MP, atk, mtk, def, mef, spd, acc, eva, specialty, resist, exp, explimit, charaset);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0 && resultCode == RESULT_OK) {
-            getintentdata(data);
-            if(charaset[0]){
-                tv2.setText("編成完了");
-            }
-        }
-    }
-
-    public void getintentdata(Intent data){
-        all = data.getIntExtra("allchara",20);
-        charaset = data.getBooleanArrayExtra("set");
-        chara = data.getIntArrayExtra("chara");
-        name = data.getStringArrayExtra("name");
-        viewname = data.getStringArrayExtra("viewname");
-        Lv = data.getIntArrayExtra("Lv");
-        HP = data.getIntArrayExtra("HP");
-        MP = data.getIntArrayExtra("MP");
-        atk = data.getDoubleArrayExtra("ATK");
-        mtk = data.getDoubleArrayExtra("MTK");
-        def = data.getDoubleArrayExtra("DEF");
-        mef = data.getDoubleArrayExtra("MEF");
-        spd = data.getDoubleArrayExtra("SPD");
-        acc = data.getDoubleArrayExtra("ACC");
-        eva = data.getDoubleArrayExtra("EVA");
-        specialty = data.getStringArrayExtra("specialty");
-        resist = data.getStringArrayExtra("resist");
-        exp = data.getIntArrayExtra("EXP");
-        explimit = data.getIntArrayExtra("EXPlimit");
+    protected void onPause(){
+        super.onPause();
+        commons.setexpmul(expmul);
+        commons.setall(all);
+        commons.datatransmission(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);
+        layout.removeAllViews();
+        Hlayout.removeAllViews();
     }
 
     public void setintentdata(){
+        for(k=0;k<4;k++){
+            if(charaset[k]) {
+                HPMAX[k] = (int) HP[k];
+                MPMAX[k] = (int) MP[k];
+            }
+        }
         i.putExtra("level",lock);
         i.putExtra("stage",stage);
         i.putExtra("set",charaset);
         i.putExtra("chara",chara);
         i.putExtra("viewname",viewname);
         i.putExtra("Lv",Lv);
-        i.putExtra("HP", HP);
-        i.putExtra("HPMAX",HP);
-        i.putExtra("MP", MP);
-        i.putExtra("MPMAX",MP);
+        i.putExtra("HP", HPMAX);
+        i.putExtra("HPMAX",HPMAX);
+        i.putExtra("MP", MPMAX);
+        i.putExtra("MPMAX",MPMAX);
         i.putExtra("ATK",atk);
         i.putExtra("MTK",mtk);
         i.putExtra("DEF",def);
@@ -310,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        commons.datatransmission(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);
     }
 
     public void statustable(int s) {
@@ -338,8 +324,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void statusup(int s){
         Lv[s]++;
-        HP[s]=(int)((double)HP[s]+pHP);
-        MP[s]=(int)((double)MP[s]+pMP);
+        HP[s]=HP[s]+pHP;
+        MP[s]=MP[s]+pMP;
         atk[s]=atk[s]+patk;
         mtk[s]=mtk[s]+pmtk;
         def[s]=def[s]+pdef;
@@ -428,8 +414,8 @@ public class MainActivity extends AppCompatActivity {
                 name[tmp] = c.getString(1);
                 viewname[tmp] = c.getString(2);
                 Lv[tmp] = c.getInt(3);
-                HP[tmp] = c.getInt(4);
-                MP[tmp] = c.getInt(5);
+                HP[tmp] = c.getDouble(4);
+                MP[tmp] = c.getDouble(5);
                 atk[tmp] = c.getDouble(6);
                 mtk[tmp] = c.getDouble(7);
                 def[tmp] = c.getDouble(8);
@@ -1091,10 +1077,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void onPause(){
-        super.onPause();
+    @Override
+    public void onBackPressed() {
+        alertDialog = new AlertDialog.Builder(MainActivity.this)
+                .setTitle("アプリを終了しますか？")
+                .setPositiveButton(
+                        "はい",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                moveTaskToBack(true);
+                            }
+                        })
+                .setNegativeButton(
+                        "いいえ",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                alertDialog.dismiss();
+                            }
 
-        layout.removeAllViews();
+                        })
+                .show();
+
     }
 
     protected void onDestroy(){

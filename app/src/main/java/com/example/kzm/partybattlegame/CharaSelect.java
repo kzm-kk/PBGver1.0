@@ -22,11 +22,11 @@ public class CharaSelect extends AppCompatActivity {
     String specialty[]=new String[4], sst;
     String resist[]=new String[4], sres;
     int chara[]=new int[4],Lv[]=new int[4];
-    int HP[]=new int[4],MP[]=new int[4];
     int exp[]=new int[4],explimit[]=new int[4];
     int n,k,set=0,all=20,code;
-    int schara,sLv,sHP,sMP,sexp,sexplimit,maxdata=200;
-    double satk,smtk,sdef,smef,sspd,sacc,seva,expmul;
+    int schara,sLv,sexp,sexplimit,maxdata=200;
+    double sHP,sMP,satk,smtk,sdef,smef,sspd,sacc,seva,expmul;
+    double HP[]=new double[4],MP[]=new double[4];
     double atk[]=new double[4],mtk[]=new double[4];
     double def[]=new double[4],mef[]=new double[4];
     double spd[]=new double[4],acc[]=new double[4],eva[]=new double[4];
@@ -42,68 +42,47 @@ public class CharaSelect extends AppCompatActivity {
     Cursor c;
     LinearLayout layout;
     LinearLayout.LayoutParams params;
-
+    private MainView myView;
+    Commons commons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_charaselect);
         hp = new MyOpenHelper(this);
-        db = hp.getReadableDatabase();
+        db = hp.getWritableDatabase();
         layout= (LinearLayout) findViewById(R.id.charalist);
-
         tv=findViewById(R.id.statustext);
         tv.setText("");
         tv2=findViewById(R.id.partytext);
         tv2.setText("");
         bt=findViewById(R.id.decidebutton);
-        bt.setText("編成終了");
+        bt.setText("編成決定");
         bt2=findViewById(R.id.setbutton);
-        bt2.setText("編成する");
+        bt2.setText("パーティー編入");
         bt3=findViewById(R.id.removebutton);
         bt3.setText("リセット");
-        bt4=findViewById(R.id.backbutton);
-        bt4.setText("戻る");
+        for(k=0;k<4;k++)charaset[k]=false;
         i = this.getIntent();
-        charaset = i.getBooleanArrayExtra("set");
-        all = i.getIntExtra("allchara",20);
-        expmul = i.getDoubleExtra("expmul",1.2);
         remove = i.getBooleanExtra("remove",false);
-        bt4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!remove)finish();
-                else {
-                    Toast.makeText(CharaSelect.this,
-                            "今は戻れません。編成を完了してください",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        commons = (Commons) getApplication();
+        myView = findViewById(R.id.back2).findViewById(R.id.view);
+        commons.backinit(myView);
+        commons.makebutton();
         allclean();
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent){
-        this.setIntent(intent);
-        all = Math.max(all, intent.getIntExtra("allchara",20));
+        Button bty =findViewById(R.id.back2).findViewById(R.id.battle);
+        bty.setOnClickListener(commons.MM);
+        Button btx =findViewById(R.id.back2).findViewById(R.id.characters);
+        Button btz =findViewById(R.id.back2).findViewById(R.id.additions);
+        btz.setOnClickListener(commons.MA);
+        bt4 = findViewById(R.id.back2).findViewById(R.id.options);
+        bt4.setOnClickListener(commons.MO);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
         layout.removeAllViews();
-        Button addbt = new Button(this);
-        addbt.setText("キャラ追加");
-        layout.addView(addbt);
-        addbt.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                i = new Intent(CharaSelect.this,AddCharacter.class);
-                i.putExtra("allchara",all);
-                i.putExtra("expmul",expmul);
-                startActivity(i);
-            }
-        });
         c = db.query("personimage",new String[]{"code","charaimage"},null,null,null,null,null);
         next = c.moveToFirst();
         int j=1;
@@ -124,39 +103,16 @@ public class CharaSelect extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(charaset[0]) {
-                    if(remove){
-                        i = new Intent(CharaSelect.this,MainActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        i.putExtra("remove",remove);
-                    } else {
-                        i = new Intent();
-                    }
-                    i.putExtra("allchara", all);
-                    i.putExtra("set",charaset);
-                    i.putExtra("chara", chara);
-                    i.putExtra("name", name);
-                    i.putExtra("viewname",viewname);
-                    i.putExtra("Lv", Lv);
-                    i.putExtra("HP", HP);
-                    i.putExtra("MP", MP);
-                    i.putExtra("ATK", atk);
-                    i.putExtra("MTK", mtk);
-                    i.putExtra("DEF", def);
-                    i.putExtra("MEF", mef);
-                    i.putExtra("SPD", spd);
-                    i.putExtra("ACC", acc);
-                    i.putExtra("EVA", eva);
-                    i.putExtra("specialty", specialty);
-                    i.putExtra("resist",resist);
-                    i.putExtra("EXP", exp);
-                    i.putExtra("EXPlimit", explimit);
-                    if(remove){
-                        startActivity(i);
-                    } else {
-                        setResult(RESULT_OK, i);
-                        finish();
-                    }
+                    commons.setall(all);
+                    commons.datatransmission(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);
+                    Toast.makeText(CharaSelect.this,
+                            "編成を決定しました！"
+                            +"\n"+viewname[0]+" "+viewname[1]+" "+viewname[2]+" "+viewname[3],
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CharaSelect.this,
+                            "編成が完了していません",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -206,7 +162,7 @@ public class CharaSelect extends AppCompatActivity {
 
     View.OnClickListener content = new View.OnClickListener() {
         public void onClick(View view) {
-            n = ((ViewGroup) view.getParent()).indexOfChild((View)view);
+            n = ((ViewGroup) view.getParent()).indexOfChild((View)view)+1;
             dataset(countup[n],set);
             dataview();
             showdata=true;
@@ -224,8 +180,8 @@ public class CharaSelect extends AppCompatActivity {
                     sname = c.getString(1);
                     svn = c.getString(2);
                     sLv = c.getInt(3);
-                    sHP = c.getInt(4);
-                    sMP = c.getInt(5);
+                    sHP = c.getDouble(4);
+                    sMP = c.getDouble(5);
                     satk = c.getDouble(6);
                     smtk = c.getDouble(7);
                     sdef = c.getDouble(8);
@@ -245,7 +201,7 @@ public class CharaSelect extends AppCompatActivity {
     }
 
     public void dataview(){
-        tv.setText("Name\n" + sname +"\nLv"+ sLv +" HP:"+ sHP +"\nMP:"+ sMP +" 攻撃:"+ (int)satk +"\n魔攻:"+ (int)smtk
+        tv.setText("Name\n" + sname +"\nLv"+ sLv +" HP:"+ (int)sHP +"\nMP:"+ (int)sMP +" 攻撃:"+ (int)satk +"\n魔攻:"+ (int)smtk
                 +" 防御:"+ (int)sdef +"\n魔防:"+ (int)smef +" 速さ:"+ (int)sspd +"\n命中:"+ (int)sacc +" 回避:"+ (int)seva +"\nEXP " + sexp + "/" + sexplimit);
     }
 
@@ -266,7 +222,7 @@ public class CharaSelect extends AppCompatActivity {
             acc[k] = 0;
             eva[k] = 0;
             specialty[k] = "";
-            resist[set] = "";
+            resist[k] = "";
             exp[k] = 0;
             explimit[k] = 1;
         }

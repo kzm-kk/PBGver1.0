@@ -104,10 +104,7 @@ public class AddLearning extends AppCompatActivity {
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                i = new Intent(AddLearning.this, OptionActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(i);
+                finish();
             }
         });
         bt2 = (Button) findViewById(R.id.buttons4).findViewById(R.id.explain);

@@ -185,6 +185,7 @@ public class BattleActivity extends AppCompatActivity {
                         i.putExtra("level",level+1);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        i.putExtra("battle",true);
                     } else if(stage==6){
                         finish();
                     } else {
@@ -213,6 +214,7 @@ public class BattleActivity extends AppCompatActivity {
                     i = new Intent(BattleActivity.this, MainActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    i.putExtra("battle",true);
                 }
                 i.putExtra("set",charaset);
                 i.putExtra("explus", explus);

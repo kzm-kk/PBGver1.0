@@ -172,7 +172,6 @@ public class AddGrows extends AppCompatActivity {
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);*/
         i = new Intent(AddGrows.this, Two_Choices.class);
         i.putExtra("allchara", all);
-        i.putExtra("page",1);
         Toast.makeText(AddGrows.this,
                 fullname+"を登録しました",
                 Toast.LENGTH_SHORT).show();

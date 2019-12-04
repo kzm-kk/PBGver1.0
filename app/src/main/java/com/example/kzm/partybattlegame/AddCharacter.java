@@ -62,6 +62,7 @@ public class AddCharacter extends AppCompatActivity {
     Bitmap bitmap;
     LinearLayout layout;
     LinearLayout.LayoutParams params;
+    private Commons commons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,14 +75,14 @@ public class AddCharacter extends AppCompatActivity {
         tv.setText("Lv以外のパラメータは\nLv1時点のステータスを\n設定してください\n次の画面で設定する\n成長度合を用いて\n最終パラメータを\n算出します");
         TextView cut = findViewById(R.id.cuttext);
         TextView twice = findViewById(R.id.twicetext);
-        i = this.getIntent();
         hp = new MyOpenHelper(this);
         db = hp.getWritableDatabase();
         sp = findViewById(R.id.specialtysp);
         sp2 = findViewById(R.id.cutsp);
         sp3 = findViewById(R.id.twicesp);
-        all = i.getIntExtra("allchara", 20);
-        expmul = i.getDoubleExtra("expmul", 1.2);
+        commons = (Commons) getApplication();
+        all = commons.getall();
+        expmul = commons.getexpmul();
         et[0] = findViewById(R.id.fullname);
         et[1] = findViewById(R.id.viewname);
         et[2] = findViewById(R.id.level);

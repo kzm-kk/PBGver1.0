@@ -6,19 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".OptionActivity">
 
-    <include layout="@layout/layout_backview" android:id="@+id/back2"/>
-
-    <Button
-        android:id="@+id/backmain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <include layout="@layout/layout_backview" android:id="@+id/back4"/>
 
     <TextView
         android:id="@+id/optiontext"
@@ -48,26 +36,15 @@
             android:layout_weight="0">
 
             <Button
-                android:id="@+id/addability"
+                android:id="@+id/maxbattle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_state"
-                android:text="Button" />
-
-            <Button
-                android:id="@+id/addlearning"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_state"
                 android:text="Button" />
-
         </TableRow>
 
         <TableRow
@@ -77,21 +54,10 @@
             android:layout_weight="0">
 
             <Button
-                android:id="@+id/maxbattle"
+                android:id="@+id/reference"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_state"
-                android:text="Button" />
-
-            <Button
-                android:id="@+id/removes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_state"
@@ -105,14 +71,16 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/reference"
+                android:id="@+id/notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_column="0"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_state"
                 android:text="Button" />
+
         </TableRow>
 
         <TableRow
@@ -140,9 +108,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/backmain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/table"></LinearLayout>

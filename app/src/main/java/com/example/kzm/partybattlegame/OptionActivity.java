@@ -17,8 +17,10 @@ public class OptionActivity extends AppCompatActivity {
     String viewname[]=new String[4],specialty[]=new String[4],resist[]=new String[4];
     int prepare = 0;
     int chara[]=new int[4],Lv[]=new int[4];
-    int HP[]=new int[4],MP[]=new int[4];
+    int HPMAX[]=new int[4],MPMAX[]=new int[4];
+    int exp[]=new int[4],explimit[]=new int[4];
     int n,k;
+    double HP[]=new double[4],MP[]=new double[4];
     double atk[]=new double[4],mtk[]=new double[4];
     double def[]=new double[4],mef[]=new double[4];
     double spd[]=new double[4],acc[]=new double[4],eva[]=new double[4];
@@ -27,13 +29,13 @@ public class OptionActivity extends AppCompatActivity {
     double cor[][]={{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1}};
     double pcor=1.1,mcor=0.9;
     TextView tv,tv2;
-    Button bt,bt2,bt3,bt4,bt5,bt6,bt7;
+    Button bt,bt2,bt3,bt4;
     Intent i;
     MyOpenHelper hp;
     SQLiteDatabase db;
     Cursor c;
     private MainView myView;
-    private Commons commons;
+    Commons commons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,54 +43,28 @@ public class OptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_option);
         hp = new MyOpenHelper(this);
         db = hp.getWritableDatabase();
-        myView = findViewById(R.id.back2).findViewById(R.id.view);
-        commons = (Commons) getApplication();
-        commons.init(myView);
+        myView = findViewById(R.id.back4).findViewById(R.id.view);
+        commons = (Commons) this.getApplication();
+        commons.backinit(myView);
+        commons.makebutton();
         tv = findViewById(R.id.optiontext);
         tv.setText("オプションメニュー");
         final LinearLayout layout = findViewById(R.id.maxlayout);
         i = this.getIntent();
         int lock = i.getIntExtra("level",1);
-        charaset = i.getBooleanArrayExtra("set");
-        chara = i.getIntArrayExtra("chara");
-        name = i.getStringArrayExtra("name");
-        viewname = i.getStringArrayExtra("viewname");
-        Lv = i.getIntArrayExtra("Lv");
-        HP = i.getIntArrayExtra("HP");
-        MP = i.getIntArrayExtra("MP");
-        atk = i.getDoubleArrayExtra("ATK");
-        mtk = i.getDoubleArrayExtra("MTK");
-        def = i.getDoubleArrayExtra("DEF");
-        mef = i.getDoubleArrayExtra("MEF");
-        spd = i.getDoubleArrayExtra("SPD");
-        acc = i.getDoubleArrayExtra("ACC");
-        eva = i.getDoubleArrayExtra("EVA");
-        specialty = i.getStringArrayExtra("specialty");
-        resist = i.getStringArrayExtra("resist");
-        bt = (Button) findViewById(R.id.addability);
-        bt.setText("技のセッティング");
+        bt = (Button) findViewById(R.id.credit);
+        bt.setText("クレジット");
         bt.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                //i = new Intent(OptionActivity.this, AddAbility.class);
-                i = new Intent(OptionActivity.this, Two_Choices.class);
-                i.putExtra("page",2);
-                startActivity(i);
-            }
-        });
-        //bt.setEnabled(false);
-        bt2 = (Button) findViewById(R.id.credit);
-        bt2.setText("クレジット");
-        bt2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 i = new Intent(OptionActivity.this, CreditActivity.class);
                 startActivity(i);
             }
         });
-        bt3 = (Button) findViewById(R.id.maxbattle);
-        bt3.setText("Max");
+        bt2 = (Button) findViewById(R.id.maxbattle);
+        bt2.setText("Max");
         /*if(lock<4) bt3.setEnabled(false);
         else bt3.setEnabled(true);*/
-        bt3.setOnClickListener(new View.OnClickListener() {
+        bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(prepare==0 && charaset[0]){
@@ -105,7 +81,7 @@ public class OptionActivity extends AppCompatActivity {
                     for(k=0;k<4;k++) {
                         if(charaset[k]){
                             tv2 = new TextView(OptionActivity.this);
-                            tv2.setText(name[k] + " Lv" + Lv[k] + "\nHP:" + HP[k] + " MP:" + MP[k] + " 攻撃:" + (int) atk[k] + " 魔力:" + (int) mtk[k]
+                            tv2.setText(name[k] + " Lv" + Lv[k] + "\nHP:" + (int) HP[k] + " MP:" + (int) MP[k] + " 攻撃:" + (int) atk[k] + " 魔力:" + (int) mtk[k]
                                     + " 防御:" + (int) def[k] + "\n魔防:" + (int) mef[k] + " 速さ:" + (int) spd[k] + " 命中:" + (int) acc[k] + " 回避:" + (int) eva[k]);
                             tv2.setGravity(Gravity.CENTER);
                             layout.addView(tv2);
@@ -115,6 +91,12 @@ public class OptionActivity extends AppCompatActivity {
                     prepare=0;
                     layout.removeAllViews();
                     i = new Intent(OptionActivity.this, BattleActivity.class);
+                    for(k=0;k<4;k++){
+                        if(charaset[k]) {
+                            HPMAX[k] = (int) HP[k];
+                            MPMAX[k] = (int) MP[k];
+                        }
+                    }
                     i.putExtra("level",100);
                     i.putExtra("stage",6);
                     i.putExtra("set",charaset);
@@ -144,37 +126,29 @@ public class OptionActivity extends AppCompatActivity {
                 }
             }
         });
-        bt4 = (Button) findViewById(R.id.backmain);
-        bt4.setText("戻る");
+        bt3 = findViewById(R.id.reference);
+        bt3.setText("辞典(未実装)");
+        bt3.setEnabled(false);
+        bt4 = findViewById(R.id.notification);
+        bt4.setText("リリース情報");
         bt4.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View view) {
-                finish();
-            }
-        });
-        bt5 = findViewById(R.id.reference);
-        bt5.setText("辞典(未実装)");
-        bt5.setEnabled(false);
-        bt6 = findViewById(R.id.addlearning);
-        bt6.setText("未実装");
-        bt6.setEnabled(false);
-        bt6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                i = new Intent(OptionActivity.this, AddLearning.class);
+                i = new Intent(OptionActivity.this, InformationActivity.class);
                 startActivity(i);
             }
         });
-        bt7 = findViewById(R.id.removes);
-        bt7.setText("データ削除");
-        bt7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                i = new Intent(OptionActivity.this, RemoveActivity.class);
-                startActivityForResult(i,0);
-            }
-        });
-        //bt7.setEnabled(false);
+        Button bty =findViewById(R.id.back4).findViewById(R.id.battle);
+        bty.setOnClickListener(commons.MM);
+        Button btx =findViewById(R.id.back4).findViewById(R.id.characters);
+        btx.setOnClickListener(commons.MC);
+        Button btz =findViewById(R.id.back4).findViewById(R.id.additions);
+        btz.setOnClickListener(commons.MA);
+        Button bta =findViewById(R.id.back4).findViewById(R.id.options);
+    }
+
+    protected void onResume(){
+        super.onResume();
+        commons.datareception(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);
     }
 
     public void levelup(){
@@ -182,8 +156,8 @@ public class OptionActivity extends AppCompatActivity {
             if (charaset[k]) {
                 statustable(k);
                 datacor(plus,minus);
-                HP[k]=(int)((double)HP[k]+pHP*(100-Lv[k])*cor[k][0]);
-                MP[k]=(int)((double)MP[k]+pMP*(100-Lv[k])*cor[k][1]);
+                HP[k]=HP[k]+pHP*(100-Lv[k])*cor[k][0];
+                MP[k]=MP[k]+pMP*(100-Lv[k])*cor[k][1];
                 atk[k]=atk[k]+patk*(100-Lv[k])*cor[k][2];
                 mtk[k]=mtk[k]+pmtk*(100-Lv[k])*cor[k][3];
                 def[k]=def[k]+pdef*(100-Lv[k])*cor[k][4];

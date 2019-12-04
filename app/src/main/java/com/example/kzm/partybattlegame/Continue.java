@@ -90,6 +90,7 @@ public class Continue extends AppCompatActivity {
                 i = new Intent(Continue.this, MainActivity.class);
                 i.putExtra("set",charaset);
                 i.putExtra("explus",explus);
+                i.putExtra("battle",true);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
