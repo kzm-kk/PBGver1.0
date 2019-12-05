@@ -38,6 +38,11 @@
         <activity android:name=".RemoveActivity" />
         <activity android:name=".AdditionsActivity" />
         <activity android:name=".InformationActivity"></activity>
+        <provider
+            android:authorities="com.example.kzm.PartyBattleGame.status"
+            android:name="com.example.kzm.partybattlegame.MyContentProvider"
+            android:exported="true">
+        </provider>
     </application>
 
 </manifest>
