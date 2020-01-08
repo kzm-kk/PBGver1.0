@@ -29,7 +29,7 @@ public class OptionActivity extends AppCompatActivity {
     double cor[][]={{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1}};
     double pcor=1.1,mcor=0.9;
     TextView tv,tv2;
-    Button bt,bt2,bt3,bt4;
+    Button bt,bt2,bt3,bt4,bt5;
     Intent i;
     MyOpenHelper hp;
     SQLiteDatabase db;
@@ -103,10 +103,10 @@ public class OptionActivity extends AppCompatActivity {
                     i.putExtra("chara",chara);
                     i.putExtra("viewname",viewname);
                     i.putExtra("Lv",Lv);
-                    i.putExtra("HP", HP);
-                    i.putExtra("HPMAX",HP);
-                    i.putExtra("MP", MP);
-                    i.putExtra("MPMAX",MP);
+                    i.putExtra("HP", HPMAX);
+                    i.putExtra("HPMAX",HPMAX);
+                    i.putExtra("MP", MPMAX);
+                    i.putExtra("MPMAX",MPMAX);
                     i.putExtra("ATK",atk);
                     i.putExtra("MTK",mtk);
                     i.putExtra("DEF",def);
@@ -134,6 +134,14 @@ public class OptionActivity extends AppCompatActivity {
         bt4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 i = new Intent(OptionActivity.this, InformationActivity.class);
+                startActivity(i);
+            }
+        });
+        bt5 = findViewById(R.id.DBrestore);
+        bt5.setText("データベース管理");
+        bt5.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                i = new Intent(OptionActivity.this, DBhandling.class);
                 startActivity(i);
             }
         });

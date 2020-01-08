@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
         this.setIntent(intent);
         stage=0;
         maxlock = Math.max(maxlock,intent.getIntExtra("level", 1));
+        commons.setmaxlock(maxlock);
         tv.setText("レベルセレクト 現在の最高レベル:"+maxlock);
         tv2.setText("");
         charaset = intent.getBooleanArrayExtra("set");
@@ -204,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onPause(){
         super.onPause();
+        commons.setmaxlock(maxlock);
         commons.setexpmul(expmul);
         commons.setall(all);
         commons.datatransmission(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);

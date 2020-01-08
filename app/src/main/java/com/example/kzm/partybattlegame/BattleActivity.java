@@ -248,11 +248,6 @@ public class BattleActivity extends AppCompatActivity {
         });
     }
 
-    protected void onStart(){
-        super.onStart();
-
-    }
-
     /*@Override
     protected void onDestroy(){
         super.onDestroy();
@@ -326,11 +321,9 @@ public class BattleActivity extends AppCompatActivity {
             load=loadset(type, power, turn);
             int target = data.getIntExtra("target",0);
             elenum = data.getIntExtra("element",-1);
-            //layout.removeViewAt(layout.getChildCount()-1);
-            //txtcount--;
             if(type>1 && type<5)myactionC(code, ab, target);
             else myactionAH(code, ab, target);
-            mytv[code].setTextColor(Color.GRAY);
+            mytv[code].setTextColor(Color.BLACK);
             HPcheck(code);
             ctbset(code,load);
             timing=0;
@@ -844,7 +837,7 @@ public class BattleActivity extends AppCompatActivity {
         if(HP[s] < HPMAX[s]/2 && HP[s] >= HPMAX[s]/4) mytv[s].setTextColor(Color.parseColor(half));
         else if(HP[s] < HPMAX[s]/4 && HP[s] > 0) mytv[s].setTextColor(Color.parseColor(quarter));
         else if(HP[s] <= 0) mytv[s].setTextColor(Color.parseColor(zero));
-        else mytv[s].setTextColor(Color.GRAY);
+        else mytv[s].setTextColor(Color.BLACK);
     }
 
     public int spdcheck(int sc){

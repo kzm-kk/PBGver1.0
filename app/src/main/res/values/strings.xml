@@ -110,6 +110,7 @@
     <string name="characters">キャラ\n色々</string>
     <string name="additions">追加\n色々</string>
     <string name="option">オプ\nション</string>
+    <string name="dbfile_unselected_message">ファイルが選択されませんでした</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

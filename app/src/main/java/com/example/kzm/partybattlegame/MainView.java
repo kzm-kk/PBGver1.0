@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.Random;
+
 public class MainView extends View {
     Paint paint;
     int x, y, dx, dy,x2,y2,dx2,dy2,x3,y3,x4,y4;
@@ -15,7 +17,9 @@ public class MainView extends View {
     public MainView(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
-        x= 0; y = 0; dx = 10; dy = 10; x2=80; y2=100; dx2=5; dy2=5;
+        Random rnd=new Random();
+        int r = rnd.nextInt(200)+1;
+        x= 0; y = 0; dx = 10; dy = 10; x2=r; y2=r; dx2=5; dy2=5;
     }
 
     public void changeCirclePosition() {

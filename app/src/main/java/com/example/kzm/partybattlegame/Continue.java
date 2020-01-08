@@ -13,7 +13,7 @@ public class Continue extends AppCompatActivity {
     int chara[]=new int[4],Lv[]=new int[4];
     int HP[]=new int[4],MP[]=new int[4];
     int HPMAX[]=new int[4],MPMAX[]=new int[4];
-    int explus,stage,cor;
+    int explus,stage,level;
     double atk[]=new double[4],mtk[]=new double[4];
     double def[]=new double[4],mef[]=new double[4];
     double spd[]=new double[4],acc[]=new double[4],eva[]=new double[4];
@@ -30,7 +30,7 @@ public class Continue extends AppCompatActivity {
         tv2=findViewById(R.id.CorFmessage);
         tv2.setText("『続ける』ボタンで次のバトル。負けるとこのレベルでの獲得経験値がリセットされます\n『終わる』ボタンでメイン画面に戻り、経験値を獲得します");
         i = this.getIntent();
-        cor = i.getIntExtra("correction",1);
+        level = i.getIntExtra("level",1);
         stage = i.getIntExtra("stage",0);
         charaset = i.getBooleanArrayExtra("set");
         chara = i.getIntArrayExtra("chara");
@@ -60,7 +60,7 @@ public class Continue extends AppCompatActivity {
         bt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 i = new Intent(Continue.this, BattleActivity.class);
-                i.putExtra("correction",cor);
+                i.putExtra("level",level);
                 i.putExtra("stage",stage);
                 i.putExtra("set",charaset);
                 i.putExtra("chara",chara);

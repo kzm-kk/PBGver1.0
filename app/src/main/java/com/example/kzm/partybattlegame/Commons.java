@@ -17,7 +17,7 @@ public class Commons extends Application{
     static double def[]=new double[4],mef[]=new double[4];
     static double spd[]=new double[4],acc[]=new double[4],eva[]=new double[4];
     static boolean charaset[]=new boolean[4];
-    static int all;
+    static int all,maxlock;
     static double expmul;
     MoveOption MO;
     MoveMain MM;
@@ -134,6 +134,14 @@ public class Commons extends Application{
 
     public double getexpmul(){
         return Commons.expmul;
+    }
+
+    public void setmaxlock(int a){
+        Commons.maxlock = a;
+    }
+
+    public int getmaxlock(){
+        return Commons.maxlock;
     }
 
     public void makebutton(){
