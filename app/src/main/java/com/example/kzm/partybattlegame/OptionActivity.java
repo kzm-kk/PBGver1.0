@@ -12,22 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class OptionActivity extends AppCompatActivity {
-    String message;
-    String name[]=new String[4],plus,minus;
-    String viewname[]=new String[4],specialty[]=new String[4],resist[]=new String[4];
-    int prepare = 0;
-    int chara[]=new int[4],Lv[]=new int[4];
-    int HPMAX[]=new int[4],MPMAX[]=new int[4];
-    int exp[]=new int[4],explimit[]=new int[4];
-    int n,k;
-    double HP[]=new double[4],MP[]=new double[4];
-    double atk[]=new double[4],mtk[]=new double[4];
-    double def[]=new double[4],mef[]=new double[4];
-    double spd[]=new double[4],acc[]=new double[4],eva[]=new double[4];
-    double pHP,pMP,patk,pmtk,pdef,pmef,pspd,pacc,peva;
-    boolean charaset[]=new boolean[4],next;
-    double cor[][]={{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1}};
-    double pcor=1.1,mcor=0.9;
+    String plus,minus;
+    int prepare = 0,n,k;
+    boolean next;
+    double grows[] = {1,1,1,1,1,1,1,1,1};
     TextView tv,tv2;
     Button bt,bt2,bt3,bt4,bt5;
     Intent i;
@@ -36,6 +24,7 @@ public class OptionActivity extends AppCompatActivity {
     Cursor c;
     private MainView myView;
     Commons commons;
+    Commons.person[] person_shows_op = new Commons.person[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +34,9 @@ public class OptionActivity extends AppCompatActivity {
         db = hp.getWritableDatabase();
         myView = findViewById(R.id.back4).findViewById(R.id.view);
         commons = (Commons) this.getApplication();
+        for (k = 0; k < 4; k++) {
+            person_shows_op[k] = new Commons.person();
+        }
         commons.backinit(myView);
         commons.makebutton();
         tv = findViewById(R.id.optiontext);
@@ -67,7 +59,7 @@ public class OptionActivity extends AppCompatActivity {
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(prepare==0 && charaset[0]){
+                if(prepare==0 && person_shows_op[0].getcharaset()){
                     prepare++;
                     levelup();
                     layout.removeAllViews();
@@ -79,10 +71,19 @@ public class OptionActivity extends AppCompatActivity {
                     tv2.setGravity(Gravity.CENTER);
                     layout.addView(tv2);
                     for(k=0;k<4;k++) {
-                        if(charaset[k]){
+                        if(person_shows_op[k].getcharaset()){
                             tv2 = new TextView(OptionActivity.this);
-                            tv2.setText(name[k] + " Lv" + Lv[k] + "\nHP:" + (int) HP[k] + " MP:" + (int) MP[k] + " 攻撃:" + (int) atk[k] + " 魔力:" + (int) mtk[k]
-                                    + " 防御:" + (int) def[k] + "\n魔防:" + (int) mef[k] + " 速さ:" + (int) spd[k] + " 命中:" + (int) acc[k] + " 回避:" + (int) eva[k]);
+                            tv2.setText(person_shows_op[k].getdataString("name")
+                                    + " Lv" + person_shows_op[k].getdataint("Lv")
+                                    + "\nHP:" + (int)person_shows_op[k].getdatadouble("HP")
+                                    + " MP:" + (int)person_shows_op[k].getdatadouble("MP")
+                                    + " 攻撃:" + (int)person_shows_op[k].getdatadouble("atk")
+                                    + " 魔攻:" + (int)person_shows_op[k].getdatadouble("mtk")
+                                    + " 防御:" + (int)person_shows_op[k].getdatadouble("def")
+                                    + "\n魔防:" + (int)person_shows_op[k].getdatadouble("mef")
+                                    + " 速さ:" + (int)person_shows_op[k].getdatadouble("spd")
+                                    + " 命中:" + (int)person_shows_op[k].getdatadouble("acc")
+                                    + " 回避:" + (int)person_shows_op[k].getdatadouble("eva"));
                             tv2.setGravity(Gravity.CENTER);
                             layout.addView(tv2);
                         }
@@ -91,15 +92,17 @@ public class OptionActivity extends AppCompatActivity {
                     prepare=0;
                     layout.removeAllViews();
                     i = new Intent(OptionActivity.this, BattleActivity.class);
-                    for(k=0;k<4;k++){
-                        if(charaset[k]) {
-                            HPMAX[k] = (int) HP[k];
-                            MPMAX[k] = (int) MP[k];
+                    for(k=0;k<4;k++) {
+                        if (person_shows_op[k].getcharaset()) {
+                            Commons.person_data_inbattle[k].MAX_HPwrite(person_shows_op[k].getdatadouble("HP"));
+                            Commons.person_data_inbattle[k].MAX_MPwrite(person_shows_op[k].getdatadouble("MP"));
+                            Commons.person_data_inbattle[k].remaining_HPwrite((int) person_shows_op[k].getdatadouble("HP"));
+                            Commons.person_data_inbattle[k].remaining_MPwrite((int) person_shows_op[k].getdatadouble("MP"));
                         }
                     }
                     i.putExtra("level",100);
                     i.putExtra("stage",6);
-                    i.putExtra("set",charaset);
+                    /*i.putExtra("set",charaset);
                     i.putExtra("chara",chara);
                     i.putExtra("viewname",viewname);
                     i.putExtra("Lv",Lv);
@@ -115,9 +118,9 @@ public class OptionActivity extends AppCompatActivity {
                     i.putExtra("ACC",acc);
                     i.putExtra("EVA",eva);
                     i.putExtra("specialty",specialty);
-                    i.putExtra("resist",resist);
+                    i.putExtra("resist",resist);*/
                     startActivity(i);
-                } else if(!charaset[0]){
+                } else if(!person_shows_op[0].getcharaset()){
                     layout.removeAllViews();
                     tv2 = new TextView(OptionActivity.this);
                     tv2.setText("パーティーがセットされていません");
@@ -156,117 +159,107 @@ public class OptionActivity extends AppCompatActivity {
 
     protected void onResume(){
         super.onResume();
-        commons.datareception(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);
+            for(int s=0;s<4;s++){
+                person_shows_op[s].setcharaset(commons.person_data[s].getcharaset());
+                person_shows_op[s].setdataint("chara", commons.person_data[s].getdataint("chara"));
+                person_shows_op[s].setdataString("name", commons.person_data[s].getdataString("name"));
+                person_shows_op[s].setdataString("viewname", commons.person_data[s].getdataString("viewname"));
+                person_shows_op[s].setdataint("Lv", commons.person_data[s].getdataint("Lv"));
+                person_shows_op[s].setdatadouble("HP", commons.person_data[s].getdatadouble("HP"));
+                person_shows_op[s].setdatadouble("MP", commons.person_data[s].getdatadouble("MP"));
+                person_shows_op[s].setdatadouble("atk", commons.person_data[s].getdatadouble("atk"));
+                person_shows_op[s].setdatadouble("mtk", commons.person_data[s].getdatadouble("mtk"));
+                person_shows_op[s].setdatadouble("def", commons.person_data[s].getdatadouble("def"));
+                person_shows_op[s].setdatadouble("mef", commons.person_data[s].getdatadouble("mef"));
+                person_shows_op[s].setdatadouble("spd", commons.person_data[s].getdatadouble("spd"));
+                person_shows_op[s].setdatadouble("acc", commons.person_data[s].getdatadouble("acc"));
+                person_shows_op[s].setdatadouble("eva", commons.person_data[s].getdatadouble("eva"));
+                person_shows_op[s].setdataString("specialty", commons.person_data[s].getdataString("specialty"));
+                person_shows_op[s].setdataString("resist", commons.person_data[s].getdataString("resist"));
+                person_shows_op[s].setdataint("exp", commons.person_data[s].getdataint("exp"));
+                person_shows_op[s].setdataint("explimit", commons.person_data[s].getdataint("explimit"));
+            }
+    }
+
+    public void statusup(int num, int lvup){
+        String parameters[] = {"HP", "MP", "atk", "mtk", "def", "mef", "spd", "acc", "eva"};
+        for(int s=0;s<9;s++){
+            double predata = person_shows_op[num].getdatadouble(parameters[s]);
+            predata = predata + grows[s] * lvup;
+            person_shows_op[num].setdatadouble(parameters[s], predata);
+        }
     }
 
     public void levelup(){
         for(k=0;k<4;k++) {
-            if (charaset[k]) {
+            int Lv = person_shows_op[k].getdataint("Lv");
+            if (person_shows_op[k].getcharaset()) {
                 statustable(k);
-                datacor(plus,minus);
-                HP[k]=HP[k]+pHP*(100-Lv[k])*cor[k][0];
-                MP[k]=MP[k]+pMP*(100-Lv[k])*cor[k][1];
-                atk[k]=atk[k]+patk*(100-Lv[k])*cor[k][2];
-                mtk[k]=mtk[k]+pmtk*(100-Lv[k])*cor[k][3];
-                def[k]=def[k]+pdef*(100-Lv[k])*cor[k][4];
-                mef[k]=mef[k]+pmef*(100-Lv[k])*cor[k][5];
-                spd[k]=spd[k]+pspd*(100-Lv[k])*cor[k][6];
-                acc[k]=acc[k]+pacc*(100-Lv[k])*cor[k][7];
-                eva[k]=eva[k]+peva*(100-Lv[k])*cor[k][8];
-                Lv[k]=100;
+                datacorretion(plus, 1.1);
+                datacorretion(minus, 0.9);
+                statusup(k, 100 - Lv);
+                person_shows_op[k].setdataint("Lv", 100);
             }
         }
     }
 
-    public void statustable(int s) {
+    public void statustable(int tmp) {
         c = db.query("growtable", new String[]{"code", "HP", "MP", "ATK", "MTK", "DEF", "MEF", "SPD", "ACC", "EVA", "plus", "minus"}, null, null, null, null, null);
         next = c.moveToFirst();
         while (next) {
             n = c.getInt(0);
-            if (chara[s] == n) {
-                pHP = c.getDouble(1);
-                pMP = c.getDouble(2);
-                patk = c.getDouble(3);
-                pmtk = c.getDouble(4);
-                pdef = c.getDouble(5);
-                pmef = c.getDouble(6);
-                pspd = c.getDouble(7);
-                pacc = c.getDouble(8);
-                peva = c.getDouble(9);
+            if (person_shows_op[tmp].getdataint("chara") == n) {
+                grows[0] = c.getDouble(1);
+                grows[1] = c.getDouble(2);
+                grows[2] = c.getDouble(3);
+                grows[3] = c.getDouble(4);
+                grows[4] = c.getDouble(5);
+                grows[5] = c.getDouble(6);
+                grows[6] = c.getDouble(7);
+                grows[7] = c.getDouble(8);
+                grows[8] = c.getDouble(9);
                 plus = c.getString(10);
                 minus = c.getString(11);
                 break;
             }
             next = c.moveToNext();
         }
-        if(s==3) c.close();
+        if(tmp==3)c.close();
     }
 
-    public void datacor(String plus,String minus){
-        switch (plus){
+    public void datacorretion(String corretion, double parameter){
+        switch (corretion){
             case "HP":
-                cor[k][0] = pcor;
+                grows[0] *= parameter;
                 break;
             case "MP":
-                cor[k][1] = pcor;
+                grows[1] *= parameter;
                 break;
             case "ATK":
-                cor[k][2] = pcor;
+                grows[2] *= parameter;
                 break;
             case "MTK":
-                cor[k][3] = pcor;
+                grows[3] *= parameter;
                 break;
             case "DEF":
-                cor[k][4] = pcor;
+                grows[4] *= parameter;
                 break;
             case "MEF":
-                cor[k][5] = pcor;
+                grows[5] *= parameter;
                 break;
             case "SPD":
-                cor[k][6] = pcor;
+                grows[6] *= parameter;
                 break;
             case "ACC":
-                cor[k][7] = pcor;
+                grows[7] *= parameter;
                 break;
             case "EVA":
-                cor[k][8] = pcor;
-                break;
-            default:
-                break;
-        }
-        switch (minus){
-            case "HP":
-                cor[k][0] = mcor;
-                break;
-            case "MP":
-                cor[k][1] = mcor;
-                break;
-            case "ATK":
-                cor[k][2] = mcor;
-                break;
-            case "MTK":
-                cor[k][3] = mcor;
-                break;
-            case "DEF":
-                cor[k][4] = mcor;
-                break;
-            case "MEF":
-                cor[k][5] = mcor;
-                break;
-            case "SPD":
-                cor[k][6] = mcor;
-                break;
-            case "ACC":
-                cor[k][7] = mcor;
-                break;
-            case "EVA":
-                cor[k][8] = mcor;
+                grows[8] *= parameter;
                 break;
             default:
                 break;
         }
     }
-
 
     @Override
     public void onBackPressed() {

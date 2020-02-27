@@ -22,22 +22,10 @@ import android.widget.TextView;
 import java.util.Random;
 
 public class BattleActivity extends AppCompatActivity {
-    String viewname[]=new String[4],specialty[]=new String[4],resist[]=new String[4];
-    int chara[]=new int[4],Lv[]=new int[4];
-    int HP[]=new int[4],MP[]=new int[4];
-    int HPMAX[]=new int[4],MPMAX[]=new int[4];
-    double atk[]=new double[4],mtk[]=new double[4];
-    double def[]=new double[4],mef[]=new double[4];
-    double spd[]=new double[4],acc[]=new double[4],eva[]=new double[4],resistnum[][]=new double[8][8];
-    boolean charaset[]=new boolean[4],death[]=new boolean[4];
-    String ename[]=new String[4],eresist[]=new String[4];
-    int enemy[]=new int[4];
-    int eHP[]=new int[4],eHPMAX[]=new int[4];
-    int eMP[]=new int[4],eMPMAX[]=new int[4];
-    double eat[]=new double[4],emt[]=new double[4];
-    double edf[]=new double[4],emf[]=new double[4];
-    double esp[]=new double[4],eac[]=new double[4],eev[]=new double[4];
-    boolean enemyset[]=new boolean[4],enemydeath[]=new boolean[4],next;
+    String viewname[]=new String[4], ename[]=new String[4];
+    double resistnum[][]=new double[8][8];
+    boolean charaset[]=new boolean[4], death[]=new boolean[4];
+    boolean enemyset[]=new boolean[4], enemydeath[]=new boolean[4];
     int cor,Emeny,level,power,turn,usemp,type,effectgo=0,cri,DFcri=1,hit,elenum,beginill=15,fullchange=17;
     int explus,getexp=0,timing,stage,m,n,k,max=0,code,txtcount,delaytime=2000,hitstandard = 90;
     double OF,DF,DM,load,aveDM=0,mul=2.0;
@@ -47,7 +35,7 @@ public class BattleActivity extends AppCompatActivity {
     int eability[][][] = new int[Ekindmax][8][5];//right 0 usemp 1 power 2 turn 3 type 4 effectgo
     String eabstr[][][]= new String[Ekindmax][8][3];//right 0 abilityname 1 target 2 element
     String half="#DAA520", quarter="#FF8C00", zero="#800000", thisturn="#8A2BE2";
-    boolean myc=false,ec=false,miss=false;
+    boolean myc=false,ec=false,miss=false,next;
     Random rnd=new Random();
     TextView tv,mytv[]=new TextView[4],etv[]=new TextView[4];
     Button bt,state;
@@ -56,23 +44,148 @@ public class BattleActivity extends AppCompatActivity {
     Intent i;
     MyOpenHelper hp;
     SQLiteDatabase db;
-    Cursor c,c2,c3;
+    Cursor c,c2;
+    Commons commons;
     ScrollView scrollView;
     //MediaPlayer music=new MediaPlayer();
     private final Handler handler = new Handler();
     private Runnable runnable;
-    private class ActivityResult {
-        private final int requestCode;
-        private final int resultCode;
-        private final Intent data;
-
-        private ActivityResult(int requestCode, int resultCode, Intent data) {
-            this.requestCode = requestCode;
-            this.resultCode = resultCode;
-            this.data = data;
+    Commons.person_inbattle[] person_data = new Commons.person_inbattle[4];
+    class enemydata{
+        int enemy, HP, MP, HPMAX, MPMAX;
+        double atk, mtk, def, mef, spd, acc, eva;
+        boolean enemyset;
+        String name, resist;
+        public enemydata(){
+            this.HPMAX = 0;
+            this.MPMAX = 0;
+            this.name = "";
+            this.resist = "";
+            this.enemyset = false;
         }
+
+        public int getdataint(String str){
+            switch (str){
+                case "enemy":
+                    return this.enemy;
+                case "HP":
+                    return this.HP;
+                case "MP":
+                    return this.MP;
+                case "HPMAX":
+                    return this.HPMAX;
+                case "MPMAX":
+                    return this.MPMAX;
+                default://基本使わない
+                    return 1;
+            }
+        }
+
+        public double getdatadouble(String str){
+            switch (str){
+                case "atk":
+                    return this.atk;
+                case "mtk":
+                    return this.mtk;
+                case "def":
+                    return this.def;
+                case "mef":
+                    return this.mef;
+                case "spd":
+                    return this.spd;
+                case "acc":
+                    return this.acc;
+                case "eva":
+                    return this.eva;
+                default://基本使わない
+                    return 1.0;
+            }
+        }
+
+        public String getdataString(String str){
+            switch (str){
+                case "name":
+                    return this.name;
+                case "resist":
+                    return this.resist;
+                default://基本使わない
+                    return " ";
+            }
+        }
+
+        public boolean getenemyset(){
+            return this.enemyset;
+        }
+
+        public void setdataint(String str, int data){
+            switch (str){
+                case "enemy":
+                    this.enemy = data;
+                    break;
+                case "HP":
+                    this.HP = data;
+                    break;
+                case "MP":
+                    this.MP = data;
+                    break;
+                case "HPMAX":
+                    this.HPMAX = data;
+                    break;
+                case "MPMAX":
+                    this.MPMAX = data;
+                    break;
+                default://基本使わない
+                    break;
+            }
+        }
+
+        public void setdatadouble(String str, double data){
+            switch (str){
+                case "atk":
+                    this.atk = data;
+                    break;
+                case "mtk":
+                    this.mtk = data;
+                    break;
+                case "def":
+                    this.def = data;
+                    break;
+                case "mef":
+                    this.mef = data;
+                    break;
+                case "spd":
+                    this.spd = data;
+                    break;
+                case "acc":
+                    this.acc = data;
+                    break;
+                case "eva":
+                    this.eva = data;
+                    break;
+                default://基本使わない
+                    break;
+            }
+        }
+
+        public void setdataString(String str, String data){
+            switch (str){
+                case "name":
+                    this.name = data;
+                    break;
+                case "resist":
+                    this.resist = data;
+                    break;
+                default://基本使わない
+                    break;
+            }
+        }
+
+        public void setenemyset(boolean enemyset){
+            this.enemyset = enemyset;
+        }
+
     }
-    private ActivityResult activityResult;
+    enemydata[] enemies = new enemydata[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +193,11 @@ public class BattleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_battle);
         hp = new MyOpenHelper(this);
         db = hp.getWritableDatabase();
+        commons = (Commons) getApplication();
+        for(k=0;k<4;k++){
+            person_data[k] = new Commons.person_inbattle();
+            enemies[k] = new enemydata();
+        }
         myiv[0]=findViewById(R.id.myview0);
         myiv[1]=findViewById(R.id.myview1);
         myiv[2]=findViewById(R.id.myview2);
@@ -88,7 +206,7 @@ public class BattleActivity extends AppCompatActivity {
         layout=findViewById(R.id.battletext);
         mytv[0] = findViewById(R.id.mystatus0);
         mytv[1] = findViewById(R.id.mystatus1);
-        mytv[2] = findViewById(R.id.mystatus2) ;
+        mytv[2] = findViewById(R.id.mystatus2);
         mytv[3] = findViewById(R.id.mystatus3);
         etv[0] = findViewById(R.id.enemystatus0);
         etv[1] = findViewById(R.id.enemystatus1);
@@ -100,74 +218,57 @@ public class BattleActivity extends AppCompatActivity {
         state.setText("状態チェック");
         i = this.getIntent();
         level = i.getIntExtra("level",1);
-
         if(level>1) cor=(level-1)*2;
         else cor = 1;
         stage = i.getIntExtra("stage",0);
         if(stage==6) cor=10;
-        charaset = i.getBooleanArrayExtra("set");
-        chara = i.getIntArrayExtra("chara");
-        viewname = i.getStringArrayExtra("viewname");
-        Lv = i.getIntArrayExtra("Lv");
-        HP = i.getIntArrayExtra("HP");
-        HPMAX = i.getIntArrayExtra("HPMAX");
-        MP = i.getIntArrayExtra("MP");
-        MPMAX = i.getIntArrayExtra("MPMAX");
-        atk = i.getDoubleArrayExtra("ATK");
-        mtk = i.getDoubleArrayExtra("MTK");
-        def = i.getDoubleArrayExtra("DEF");
-        mef = i.getDoubleArrayExtra("MEF");
-        spd = i.getDoubleArrayExtra("SPD");
-        acc = i.getDoubleArrayExtra("ACC");
-        eva = i.getDoubleArrayExtra("EVA");
-        specialty = i.getStringArrayExtra("specialty");
-        resist = i.getStringArrayExtra("resist");
-        explus = i.getIntExtra("explus",0);
-        /*if(stage==0) {
-            audioSetup();
+        if(stage==0 || stage==6) {
+            /*audioSetup();
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
-            music.start();
-        }*/
+            music.start();*/
+        }
+        battle_preparation();
+        explus = i.getIntExtra("explus",0);
         Emeny = rnd.nextInt(4)+1;
         if(stage==4 || stage==6) Emeny=4;
         enemydata();
         levelminus(level);
         for(int i=1;i<10;i++)  dupname(i);
         for(k=0;k<4;k++) {
-            if(charaset[k]) {
-                ctb[k] = spdcheck((int) spd[k]);
-                spdlist[k] = (int)spd[k];
-                death[k] = false;
+            if(person_data[k].getcharaset()) {
+                ctb[k] = spdcheck((int) person_data[k].getdatadouble("spd"));
+                spdlist[k] = (int)person_data[k].getdatadouble("spd");
                 setiv(myiv[k],k);
                 resistset(k);
                 myiv[k].setOnClickListener(content);
                 myiv[k].setEnabled(true);
+                count[k]=1000;
+                for(n=0;n<fullchange;n++) irregular[k][n]=0;
                 max++;
             } else {
                 ctb[k] = 0;
                 spdlist[k] = 0;
-                death[k] = true;
+                count[k] = 1000;
                 myiv[k].setEnabled(false);
             }
-            if(enemyset[k]){
-                eHPMAX[k] = eHP[k];
-                eMPMAX[k] = eMP[k];
-                ctb[k+4] = spdcheck((int)esp[k]);
-                spdlist[k+4] = (int)esp[k];
+            if(enemies[k].enemyset){
+                enemies[k].HPMAX = enemies[k].HP;
+                enemies[k].MPMAX = enemies[k].MP;
+                ename[k] = enemies[k].name;
+                enemyset[k] = enemies[k].enemyset;
+                ctb[k+4] = spdcheck((int)enemies[k].spd);
+                spdlist[k+4] = (int)enemies[k].spd;
                 Eresistset(k);
                 enemydeath[k] = false;
+                count[k+4]=1000;
+                for(n=0;n<fullchange;n++) irregular[k+4][n]=0;
                 max++;
             } else {
-                eHPMAX[k] = 0;
-                eMPMAX[k] = 0;
                 ctb[k+4] = 0;
                 spdlist[k+4] = 0;
+                count[k+4] = 1000;
                 enemydeath[k] = true;
             }
-        }
-        for(n=0;n<8;n++){
-            count[n]=1000;
-            for(k=0;k<fullchange;k++) irregular[n][k]=0;
         }
         setorder();
         myc=liveordeath("us");
@@ -191,24 +292,13 @@ public class BattleActivity extends AppCompatActivity {
                     } else {
                         stage++;
                         i = new Intent(BattleActivity.this, Continue.class);
+                        for(int s=0;s<4;s++) {
+                            Commons.person_data_inbattle[s].remaining_HPwrite(person_data[s].HPMP_remaining_read("HP"));
+                            Commons.person_data_inbattle[s].remaining_MPwrite(person_data[s].HPMP_remaining_read("MP"));
+                            Commons.person_data_inbattle[s].setDeath(death[s]);
+                        }
                         i.putExtra("level", level);
                         i.putExtra("stage", stage);
-                        i.putExtra("chara", chara);
-                        i.putExtra("viewname", viewname);
-                        i.putExtra("Lv", Lv);
-                        i.putExtra("HP", HP);
-                        i.putExtra("HPMAX", HPMAX);
-                        i.putExtra("MP", MP);
-                        i.putExtra("MPMAX", MPMAX);
-                        i.putExtra("ATK", atk);
-                        i.putExtra("MTK", mtk);
-                        i.putExtra("DEF", def);
-                        i.putExtra("MEF", mef);
-                        i.putExtra("SPD", spd);
-                        i.putExtra("ACC", acc);
-                        i.putExtra("EVA", eva);
-                        i.putExtra("specialty", specialty);
-                        i.putExtra("resist",resist);
                     }
                 } else {
                     i = new Intent(BattleActivity.this, MainActivity.class);
@@ -216,7 +306,6 @@ public class BattleActivity extends AppCompatActivity {
                     i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     i.putExtra("battle",true);
                 }
-                i.putExtra("set",charaset);
                 i.putExtra("explus", explus);
                 if(stage==6) finish();
                 else startActivity(i);
@@ -279,10 +368,10 @@ public class BattleActivity extends AppCompatActivity {
             }
             if ((myc && ec)&& (code<4 && code>=0)) {
                 i = new Intent(BattleActivity.this, AttackContents.class);
-                i.putExtra("chara", chara[code]);
+                i.putExtra("chara", person_data[code].getdataint("chara"));
                 i.putExtra("name",code);
-                i.putExtra("Lv", Lv[code]);
-                i.putExtra("MP", MP[code]);
+                i.putExtra("Lv", person_data[code].getdataint("Lv"));
+                i.putExtra("MP", person_data[code].HPMP_remaining_read("MP"));
                 i.putExtra("mylive",death);
                 i.putExtra("our", viewname);
                 i.putExtra("live",enemydeath);
@@ -295,21 +384,6 @@ public class BattleActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        activityResult = new ActivityResult(requestCode, resultCode, data);
-
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        if (activityResult != null) {
-            onPostResumeWithActivityResult(activityResult.requestCode, activityResult.resultCode, activityResult.data);
-            activityResult = null;
-        }
-    }
-
-    protected void onPostResumeWithActivityResult(int requestCode, int resultCode, Intent data) {
-        // override if necessary
         if(requestCode == 1 && resultCode == RESULT_OK){
             autoscroll();
             String ab = data.getStringExtra("name");
@@ -352,15 +426,14 @@ public class BattleActivity extends AppCompatActivity {
                 }
             }
         };
-
         handler.post(runnable);
     }
 
     public void ctb(){
         while(timing==0) {
             for (n = 0; n < 8; n++) {
-                m=spdlist[n];
-                count[m] = count[m] - (int)(ctb[m]*parametercheck(m,"spd"));
+                m = spdlist[n];
+                count[m] = count[m] - (int)(ctb[m] * parametercheck(m,"spd"));
                 if (count[m] <= 0){
                     code = m;
                     timing=1;
@@ -373,7 +446,7 @@ public class BattleActivity extends AppCompatActivity {
                             txtcount++;
                             ctbset(code,1.5);
                         } else {
-                            enemyaction(enemy[code-4], eMP[code-4]);
+                            enemyaction(enemies[code - 4].enemy, enemies[code - 4].MP);
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {  turngo();                                }
@@ -439,7 +512,7 @@ public class BattleActivity extends AppCompatActivity {
     }
 
     public int poisoncheck(int k){
-        if(irregular[k][beginill+1]>0) return HPMAX[k]/32;
+        if(irregular[k][beginill+1]>0) return person_data[k].HPMP_MAX_read("HP") / 32;
         else return 0;
     }
 
@@ -500,17 +573,17 @@ public class BattleActivity extends AppCompatActivity {
     }
 
     public void myactionAH(int me, String ab, int appoint){
-        if (usemp > MP[me]) {
+        if (usemp > person_data[me].HPMP_remaining_read("MP")) {
             ab = "ただの攻撃";
             usemp = 0;
             type = 0;
             power = 5;
             effectgo = 1;
         }
-        if(effectgo<3) OF=atk[me]*parametercheck(me, "atk");
-        else if(effectgo==3 || type==5) OF=mtk[me]*parametercheck(me, "mtk");
-        MP[me] = MP[me] - usemp;
-        if (MP[me] < 0) MP[me] = 0;
+        if(effectgo<3) OF = person_data[me].getdatadouble("atk") * parametercheck(me, "atk");
+        else if(effectgo==3 || type==5) OF = person_data[me].getdatadouble("mtk") * parametercheck(me, "mtk");
+        person_data[me].remaining_MPwrite(person_data[me].HPMP_remaining_read("MP") - usemp);
+        if (person_data[me].HPMP_remaining_read("MP") < 0) person_data[me].remaining_MPwrite(0);
         if(type<2) {
             if(appoint==6){
                 aveDM=0;
@@ -537,10 +610,10 @@ public class BattleActivity extends AppCompatActivity {
 
     public void EactionAH(int me, String ab, int appoint){
         me = me-4;
-        if(effectgo<3) OF=eat[me]*parametercheck(me+4, "atk");
-        else if(effectgo==3 || type==5) OF=emt[me]*parametercheck(me+4, "mtk");
-        eMP[me] = eMP[me] - usemp;
-        if (eMP[me] < 0) eMP[me] = 0;
+        if(effectgo<3) OF = enemies[me].atk * parametercheck(me+4, "atk");
+        else if(effectgo==3 || type==5) OF = enemies[me].mtk * parametercheck(me+4, "mtk");
+        enemies[me].MP = enemies[me].MP - usemp;
+        if (enemies[me].MP < 0) enemies[me].MP = 0;
         if(type<2) {
             if(appoint==6){
                 aveDM=0;
@@ -566,8 +639,8 @@ public class BattleActivity extends AppCompatActivity {
     }
 
     public void myactionC(int me, String ab, int appoint){
-        MP[me] = MP[me] - usemp;
-        if (MP[me] < 0) MP[me] = 0;
+        person_data[me].remaining_MPwrite(person_data[me].HPMP_remaining_read("MP") - usemp);
+        if (person_data[me].HPMP_remaining_read("MP") < 0) person_data[me].remaining_MPwrite(0);
         if(appoint==6){
             for(k=0;k<4;k++) setchange(k,k+4);
         } else {
@@ -582,8 +655,8 @@ public class BattleActivity extends AppCompatActivity {
 
     public void EactionC(int me, String ab, int appoint){
         me=me-4;
-        eMP[me] = eMP[me] - usemp;
-        if (eMP[me] < 0) eMP[me] = 0;
+        enemies[me].MP = enemies[me].MP - usemp;
+        if (enemies[me].MP < 0) enemies[me].MP = 0;
         if(appoint==6){
             for(k=0;k<4;k++) setchange(k+4,k);
         } else {
@@ -599,42 +672,47 @@ public class BattleActivity extends AppCompatActivity {
     public void mydamagedecition(int me, int appoint){
         int R = rnd.nextInt(5);
         cri = rnd.nextInt(100)+1;
-        if(effectgo<3) DF=edf[appoint]*parametercheck(appoint, "def");
-        else if(effectgo==3) DF=emf[appoint]*parametercheck(appoint, "mef");
+        if(effectgo<3) DF = enemies[appoint].def * parametercheck(appoint, "def");
+        else if(effectgo==3) DF = enemies[appoint].mef * parametercheck(appoint, "mef");
         DFcri = 1;
         if(cri>97) DFcri=2;
-        DM = Math.pow(OF,mul) * (double) power*damagemul(appoint+4, elenum) / (DF/DFcri) /(((Lv[me]+9)/10)*10) + (double) Lv[me] / 4 - (double) R;
+        DM = Math.pow(OF,mul) * (double) power * damagemul(appoint+4, elenum) / (DF/DFcri)
+                /(((person_data[me].getdataint("Lv") + 9)/10)*10) + (double) person_data[me].getdataint("Lv") / 4 - (double) R;
         if (DM < 1) DM = 1;
         if(type<2){
             R = rnd.nextInt(100);
-            hit=(int)((acc[me]*parametercheck(me,"acc")-eev[appoint]*parametercheck(appoint+4, "eva"))/50+hitstandard*acccor(specialty[me]));
+            hit=(int)((person_data[me].getdatadouble("acc") * parametercheck(me,"acc")
+                    - enemies[appoint].eva * parametercheck(appoint+4, "eva")) / 50
+                    + hitstandard * acccor(person_data[me].getdataString("specialty")));
             if(R<hit) {
-                eHP[appoint] = eHP[appoint] - (int) DM;
-                if (eHP[appoint] < 0) eHP[appoint] = 0;
+                enemies[appoint].HP = enemies[appoint].HP - (int)DM;
+                if (enemies[appoint].HP < 0) enemies[appoint].HP = 0;
                 miss=false;
             } else {
                 miss=true;
                 DM=0;
             }
         }
-        aveDM+=DM;
+        aveDM += DM;
     }
 
     public void Edamagedecition(int me, int appoint){
         int R = rnd.nextInt(5);
         cri = rnd.nextInt(100)+1;
-        if(effectgo<3) DF=def[appoint]*parametercheck(appoint, "def");
-        else if(effectgo==3) DF=mef[appoint]*parametercheck(appoint, "mef");
+        if(effectgo<3) DF = person_data[appoint].getdatadouble("def") * parametercheck(appoint, "def");
+        else if(effectgo==3) DF = person_data[appoint].getdatadouble("mef") * parametercheck(appoint, "mef");
         DFcri = 1;
         if(cri>97) DFcri=2;
-        DM = Math.pow(OF,mul) * (double) power*damagemul(appoint, elenum) / (DF/DFcri) * cor / (cor*10)  - (double) R;
+        DM = Math.pow(OF,mul) * (double) power * damagemul(appoint, elenum) / (DF/DFcri) * cor / (cor*10)  - (double) R;
         if (DM < 1) DM = 1;
         if(type<2){
             R = rnd.nextInt(100);
-            hit=(int)((eac[me]*parametercheck(me,"acc")-eva[appoint]*parametercheck(appoint, "eva"))/50+hitstandard);
+            hit=(int)((enemies[me].acc * parametercheck(me,"acc") - person_data[appoint].getdatadouble("eva")
+                    * parametercheck(appoint, "eva")) / 50 + hitstandard);
             if(R<hit) {
-                HP[appoint] = HP[appoint] - (int) DM;
-                if (HP[appoint] < 0) HP[appoint] = 0;
+                int tmp = person_data[appoint].HPMP_remaining_read("HP") - (int)DM;
+                person_data[appoint].remaining_HPwrite(tmp);
+                if (person_data[appoint].HPMP_remaining_read("HP") < 0) person_data[appoint].remaining_HPwrite(0);
                 miss=false;
             } else {
                 miss=true;
@@ -646,29 +724,32 @@ public class BattleActivity extends AppCompatActivity {
 
     public void myhealing(int me, int appoint){
         double R = (rnd.nextInt(5)+6)/100+0.7;
-        DM = Math.pow(OF,1.5) * R * (double) power /(((Lv[me]+9)/10)*10)+ (double) Lv[me] / 4;
-        int sub;
+        DM = Math.pow(OF,1.5) * R * (double) power /
+                (((person_data[me].getdataint("Lv") + 9)/10)*10)+ (double) person_data[me].getdataint("Lv") / 4;
+        int sub,tmp;
         if(effectgo==1){
-            sub=HPMAX[appoint]-HP[appoint];
-            HP[appoint] = HP[appoint] + (int)DM;
-            if(HP[appoint]>HPMAX[appoint]){
-                HP[appoint] = HPMAX[appoint];
-                DM=sub;
+            sub = person_data[appoint].HPMP_MAX_read("HP") - person_data[appoint].HPMP_remaining_read("HP");
+            tmp = person_data[appoint].HPMP_remaining_read("HP") + (int)DM;
+            person_data[appoint].remaining_HPwrite(tmp);
+            if(person_data[appoint].HPMP_remaining_read("HP") > person_data[appoint].HPMP_MAX_read("HP")){
+                person_data[appoint].remaining_HPwrite(person_data[appoint].HPMP_MAX_read("HP"));
+                DM = sub;
             }
         } else if(effectgo==2){
-            sub=MPMAX[appoint]-MP[appoint];
-            MP[appoint] = MP[appoint] + (int)DM;
-            if(MP[appoint]>MPMAX[appoint]){
-                MP[appoint] = MPMAX[appoint];
-                DM=sub;
+            sub = person_data[appoint].HPMP_MAX_read("MP") - person_data[appoint].HPMP_remaining_read("MP");
+            tmp = person_data[appoint].HPMP_remaining_read("MP") + (int)DM;
+            person_data[appoint].remaining_MPwrite(tmp);
+            if(person_data[appoint].HPMP_remaining_read("MP") > person_data[appoint].HPMP_MAX_read("MP")){
+                person_data[appoint].remaining_MPwrite(person_data[appoint].HPMP_MAX_read("MP"));
+                DM = sub;
             }
         } else if(effectgo==3){
             for(k=beginill;k<fullchange;k++) irregular[appoint][k]=0;
         } else if(effectgo==4){
-            if(death[appoint]==true){
-                death[appoint]=false;
-                HP[appoint]=HPMAX[appoint]/2;
-                ctb[appoint] = spdcheck((int) spd[appoint]);
+            if(death[appoint]){
+                death[appoint] = false;
+                person_data[appoint].remaining_HPwrite(person_data[appoint].HPMP_MAX_read("HP") / 2);
+                ctb[appoint] = spdcheck((int) person_data[appoint].getdatadouble("spd"));
                 count[appoint] = 2000;
                 myiv[k].setEnabled(true);
             }
@@ -680,17 +761,17 @@ public class BattleActivity extends AppCompatActivity {
         DM = Math.pow(OF,1.5) * R * (double) power /(((cor+9)/10)*10)+ (double)cor / 4;
         int sub;
         if(effectgo==1){
-            sub=eHPMAX[appoint]-eHP[appoint];
-            eHP[appoint] = eHP[appoint] + (int)DM;
-            if(eHP[appoint]>eHPMAX[appoint]){
-                eHP[appoint] = eHPMAX[appoint];
+            sub = enemies[appoint].HPMAX - enemies[appoint].HP;
+            enemies[appoint].HP = enemies[appoint].HP + (int)DM;
+            if(enemies[appoint].HP > enemies[appoint].HPMAX){
+                enemies[appoint].HP = enemies[appoint].HPMAX;
                 DM=sub;
             }
         } else if(effectgo==2){
-            sub=eMPMAX[appoint]-eMP[appoint];
-            eMP[appoint] = eMP[appoint] + (int)DM;
-            if(eMP[appoint]>eMPMAX[appoint]){
-                eMP[appoint] = eMPMAX[appoint];
+            sub = enemies[appoint].MPMAX - enemies[appoint].MP;
+            enemies[appoint].MP = enemies[appoint].MP + (int)DM;
+            if(enemies[appoint].MP > enemies[appoint].MPMAX){
+                enemies[appoint].MP = enemies[appoint].MPMAX;
                 DM=sub;
             }
         } else if(effectgo==3){
@@ -698,8 +779,8 @@ public class BattleActivity extends AppCompatActivity {
         } else if(effectgo==4){
             if(enemydeath[appoint]==true){
                 enemydeath[appoint]=false;
-                eHP[appoint]=eHPMAX[appoint]/2;
-                ctb[appoint+4] = spdcheck((int) esp[appoint]);
+                enemies[appoint].HP = enemies[appoint].HPMAX / 2;
+                ctb[appoint+4] = spdcheck((int) enemies[appoint].spd);
                 count[appoint+4] = 2000;
             }
         }
@@ -769,14 +850,14 @@ public class BattleActivity extends AppCompatActivity {
         txtcount=txtcount+2;
         statusset();
         for(int b=0;b<4;b++) {
-            if (HP[b] <= 0 && !death[b]) {
+            if (person_data[b].HPMP_remaining_read("HP") <= 0 && !death[b]) {
                 tv = new TextView(BattleActivity.this);
                 tv.setText(viewname[b] + "は戦闘不能になってしまった……");
                 layout.addView(tv);
                 tv.setGravity(Gravity.CENTER);
                 txtcount++;
             }
-            if (eHP[b] <= 0 && !enemydeath[b]) {
+            if (enemies[b].HP <= 0 && !enemydeath[b]) {
                 tv = new TextView(BattleActivity.this);
                 tv.setText(ename[b] + "を倒した！");
                 layout.addView(tv);
@@ -823,20 +904,25 @@ public class BattleActivity extends AppCompatActivity {
 
     public void statusset(){
         for(k=0;k<4;k++) {
-            if (charaset[k]) {
-                mytv[k].setText(viewname[k] + "\nLv" + Lv[k] + "\nHP " + (HP[k]-poisoncheck(k))  + "\nMP " + MP[k]);
+            if (person_data[k].getcharaset()) {
+                mytv[k].setText(viewname[k] + "\nLv" +
+                        person_data[k].getdataint("Lv") +
+                        "\nHP " + (person_data[k].HPMP_remaining_read("HP") - poisoncheck(k)) +
+                        "\nMP " + person_data[k].HPMP_remaining_read("MP"));
                 HPcheck(k);
             } else mytv[k].setText("");
-            if (enemyset[k] && !enemydeath[k]) {
-                etv[k].setText(ename[k]+"\nHP " + (eHP[k]-poisoncheck(k)) + "\nMP " + eMP[k]);
+            if (enemies[k].enemyset && !enemydeath[k]) {
+                etv[k].setText(ename[k]+"\nHP " + (enemies[k].HP - poisoncheck(k)) + "\nMP " + enemies[k].MP);
             } else etv[k].setText("");
         }
     }
 
     public void HPcheck(int s){
-        if(HP[s] < HPMAX[s]/2 && HP[s] >= HPMAX[s]/4) mytv[s].setTextColor(Color.parseColor(half));
-        else if(HP[s] < HPMAX[s]/4 && HP[s] > 0) mytv[s].setTextColor(Color.parseColor(quarter));
-        else if(HP[s] <= 0) mytv[s].setTextColor(Color.parseColor(zero));
+        int HP = person_data[s].HPMP_remaining_read("HP");
+        int HPMAX = person_data[s].HPMP_MAX_read("HP");
+        if(HP < HPMAX/2 && HP >= HPMAX/4) mytv[s].setTextColor(Color.parseColor(half));
+        else if(HP < HPMAX/4 && HP > 0) mytv[s].setTextColor(Color.parseColor(quarter));
+        else if(HP <= 0) mytv[s].setTextColor(Color.parseColor(zero));
         else mytv[s].setTextColor(Color.BLACK);
     }
 
@@ -849,7 +935,7 @@ public class BattleActivity extends AppCompatActivity {
         int DH=0,a;
         if(str.equals("us")){
             for(a=0;a<4;a++) {
-                if (HP[a]<=0){
+                if (person_data[a].HPMP_remaining_read("HP")<=0){
                     ctb[a]=0;
                     for(k=0;k<fullchange;k++) irregular[a][k]=0;
                     death[a]=true;
@@ -859,7 +945,7 @@ public class BattleActivity extends AppCompatActivity {
             }
         } else if(str.equals("enemy")){
             for(a=0;a<4;a++) {
-                if (eHP[a]<=0){
+                if (enemies[a].HP<=0){
                     ctb[a+4]=0;
                     for(k=0;k<fullchange;k++) irregular[a+4][k]=0;
                     enemydeath[a]=true;
@@ -874,6 +960,12 @@ public class BattleActivity extends AppCompatActivity {
     }
 
     public void enemydata(){
+        /*for(int v=0;v<Ekindmax;v++){
+            for(int w=0;w<8;w++) {
+                eabstr[v][w][1]="";
+                eabstr[v][w][2]="";
+            }
+        }*/
         for(k=0;k<Emeny;k++) {
             int d = rnd.nextInt(2 + level)+1;
             if(d>10) d = (d - 10);
@@ -881,52 +973,42 @@ public class BattleActivity extends AppCompatActivity {
             Cursor c = db.query("enemy", new String[]{"code", "name", "HP", "MP", "ATK", "MTK", "DEF", "MEF", "SPD", "ACC", "EVA", "resist", "explus"}, null, null, null, null, null);
             next = c.moveToFirst();
             while (next) {
-                enemy[k] = c.getInt(0);
+                enemies[k].enemy = c.getInt(0);
                 if((stage==4 || stage==6) && k==1) d=0;
-                if (d == enemy[k]) {
-                    ename[k] = c.getString(1);
-                    eHP[k] = c.getInt(2);
-                    eMP[k] = c.getInt(3);
-                    eat[k] = c.getInt(4);
-                    emt[k] = c.getInt(5);
-                    edf[k] = c.getInt(6);
-                    emf[k] = c.getInt(7);
-                    esp[k] = c.getInt(8);
-                    eac[k] = c.getInt(9);
-                    eev[k] = c.getInt(10);
-                    eresist[k] = c.getString(11);
-                    getexp += c.getInt(12);
-                    eHP[k] *= cor;
-                    eMP[k] *= cor;
-                    eat[k] *= cor;
-                    emt[k] *= cor;
-                    edf[k] *= cor;
-                    emf[k] *= cor;
-                    esp[k] *= cor;
-                    eac[k] *= cor;
-                    eev[k] *= cor;
-                    getexp *= cor;
-                    enemyset[k] = true;
+                if (d == enemies[k].enemy) {
+                    enemies[k].name = c.getString(1);
+                    enemies[k].HP = c.getInt(2) * cor;
+                    enemies[k].MP = c.getInt(3) * cor;
+                    enemies[k].atk = c.getInt(4) * cor;
+                    enemies[k].mtk = c.getInt(5) * cor;
+                    enemies[k].def = c.getInt(6) * cor;
+                    enemies[k].mef = c.getInt(7) * cor;
+                    enemies[k].spd = c.getInt(8) * cor;
+                    enemies[k].acc = c.getInt(9) * cor;
+                    enemies[k].eva = c.getInt(10) * cor;
+                    enemies[k].resist = c.getString(11);
+                    getexp += c.getInt(12) * cor;
+                    enemies[k].enemyset = true;
                     break;
                 }
                 next = c.moveToNext();
             }
             boolean flag=false;
             for(int i=0;i<k;i++){
-                if(enemy[i]==enemy[k]) flag=true;
+                if(enemies[i].enemy == enemies[k].enemy) flag=true;
             }
             if(flag) continue;
             String sel[]=new String[1];
-            sel[0]=Integer.toString(enemy[k]);
+            sel[0]=Integer.toString(enemies[k].enemy);
             int j=1;
             int check,checklv;
-            int abnum[]=new int[Emaxab[enemy[k]]];
+            int abnum[]=new int[Emaxab[enemies[k].enemy]];
             c2 = db.query("Elearning", new String[] { "code", "abilityID", "level"}, "code = ?",
                     sel, null, null, null);
             next = c2.moveToFirst();
             while (next) {
                 check = c2.getInt(0);
-                if (check == enemy[k]) {
+                if (check == enemies[k].enemy) {
                     checklv = c2.getInt(2);
                     if(checklv <= level){
                         abnum[j]= c2.getInt(1);
@@ -938,30 +1020,30 @@ public class BattleActivity extends AppCompatActivity {
             for(int i=1;i<j;i++){
                 String sel2[]=new String[1];
                 sel2[0]=Integer.toString(abnum[i]);
-                c3 = db.query("ability", new String[] { "abilityID", "name", "usemp", "power","turn", "type", "target", "element"}, "abilityID = ?",
+                Cursor c3 = db.query("ability", new String[] { "abilityID", "name", "usemp", "power","turn", "type", "target", "element"}, "abilityID = ?",
                         sel2, null, null, null);
                 next = c3.moveToFirst();
                 while (next) {
-                        eabstr[enemy[k]][i][0] = c3.getString(1);
-                        eability[enemy[k]][i][0] = c3.getInt(2);
-                        eability[enemy[k]][i][1]  = c3.getInt(3);
-                        eability[enemy[k]][i][2]  = c3.getInt(4);
+                        eabstr[enemies[k].enemy][i][0] = c3.getString(1);
+                        eability[enemies[k].enemy][i][0] = c3.getInt(2);
+                        eability[enemies[k].enemy][i][1]  = c3.getInt(3);
+                        eability[enemies[k].enemy][i][2]  = c3.getInt(4);
                         String typecode = c3.getString(5);
-                        eabstr[enemy[k]][i][1] = c3.getString(6);
-                        eabstr[enemy[k]][i][2] = c3.getString(7);
+                        eabstr[enemies[k].enemy][i][1] = c3.getString(6);
+                        eabstr[enemies[k].enemy][i][2] = c3.getString(7);
                         checkmethod(i, typecode);
 
                     next = c3.moveToNext();
                 }
                 c3.close();
             }
-            eabstr[enemy[k]][0][0] = "通常攻撃";
-            eability[enemy[k]][0][0] = 0;
-            eability[enemy[k]][0][1]  = 25;
-            eability[enemy[k]][0][2]  = 0;
+            eabstr[enemies[k].enemy][0][0] = "通常攻撃";
+            eability[enemies[k].enemy][0][0] = 0;
+            eability[enemies[k].enemy][0][1]  = 25;
+            eability[enemies[k].enemy][0][2]  = 0;
             String typecode = "direct";
-            eabstr[enemy[k]][0][1] = "single";
-            eabstr[enemy[k]][0][2] = "normal";
+            eabstr[enemies[k].enemy][0][1] = "single";
+            eabstr[enemies[k].enemy][0][2] = "normal";
             checkmethod(0, typecode);
         }
     }
@@ -970,92 +1052,92 @@ public class BattleActivity extends AppCompatActivity {
     public void checkmethod(int s,String str){
         switch (str) {
             case "direct":
-               eability[enemy[k]][s][3] = 1;
-               eability[enemy[k]][s][4] = 1;
+               eability[enemies[k].enemy][s][3] = 1;
+               eability[enemies[k].enemy][s][4] = 1;
                 break;
             case "indirect":
-               eability[enemy[k]][s][3] = 1;
-               eability[enemy[k]][s][4] = 2;
+               eability[enemies[k].enemy][s][3] = 1;
+               eability[enemies[k].enemy][s][4] = 2;
                 break;
             case "magic":
-               eability[enemy[k]][s][3] = 1;
-               eability[enemy[k]][s][4] = 3;
+               eability[enemies[k].enemy][s][3] = 1;
+               eability[enemies[k].enemy][s][4] = 3;
                 break;
             case "atksupport":
-               eability[enemy[k]][s][3] = 2;
-               eability[enemy[k]][s][4] = 1;
+               eability[enemies[k].enemy][s][3] = 2;
+               eability[enemies[k].enemy][s][4] = 1;
                 break;
             case "mtksupport":
-               eability[enemy[k]][s][3] = 2;
-               eability[enemy[k]][s][4] = 2;
+               eability[enemies[k].enemy][s][3] = 2;
+               eability[enemies[k].enemy][s][4] = 2;
                 break;
             case "defsupport":
-               eability[enemy[k]][s][3] = 2;
-               eability[enemy[k]][s][4] = 3;
+               eability[enemies[k].enemy][s][3] = 2;
+               eability[enemies[k].enemy][s][4] = 3;
                 break;
             case "mefsupport":
-               eability[enemy[k]][s][3] = 2;
-               eability[enemy[k]][s][4] = 4;
+               eability[enemies[k].enemy][s][3] = 2;
+               eability[enemies[k].enemy][s][4] = 4;
                 break;
             case "spdsupport":
-               eability[enemy[k]][s][3] = 2;
-               eability[enemy[k]][s][4] = 5;
+               eability[enemies[k].enemy][s][3] = 2;
+               eability[enemies[k].enemy][s][4] = 5;
                 break;
             case "accsupport":
-               eability[enemy[k]][s][3] = 2;
-               eability[enemy[k]][s][4] = 6;
+               eability[enemies[k].enemy][s][3] = 2;
+               eability[enemies[k].enemy][s][4] = 6;
                 break;
             case "evasupport":
-               eability[enemy[k]][s][3] = 2;
-               eability[enemy[k]][s][4] = 7;
+               eability[enemies[k].enemy][s][3] = 2;
+               eability[enemies[k].enemy][s][4] = 7;
                 break;
             case "atkdown":
-               eability[enemy[k]][s][3] = 3;
-               eability[enemy[k]][s][4] = 1;
+               eability[enemies[k].enemy][s][3] = 3;
+               eability[enemies[k].enemy][s][4] = 1;
                 break;
             case "mtkdown":
-               eability[enemy[k]][s][3] = 3;
-               eability[enemy[k]][s][4] = 2;
+               eability[enemies[k].enemy][s][3] = 3;
+               eability[enemies[k].enemy][s][4] = 2;
                 break;
             case "defdown":
-               eability[enemy[k]][s][3] = 3;
-               eability[enemy[k]][s][4] = 3;
+               eability[enemies[k].enemy][s][3] = 3;
+               eability[enemies[k].enemy][s][4] = 3;
                 break;
             case "mefdown":
-               eability[enemy[k]][s][3] = 3;
-               eability[enemy[k]][s][4] = 4;
+               eability[enemies[k].enemy][s][3] = 3;
+               eability[enemies[k].enemy][s][4] = 4;
                 break;
             case "spddown":
-               eability[enemy[k]][s][3] = 3;
-               eability[enemy[k]][s][4] = 5;
+               eability[enemies[k].enemy][s][3] = 3;
+               eability[enemies[k].enemy][s][4] = 5;
                 break;
             case "accdown":
-               eability[enemy[k]][s][3] = 3;
-               eability[enemy[k]][s][4] = 6;
+               eability[enemies[k].enemy][s][3] = 3;
+               eability[enemies[k].enemy][s][4] = 6;
                 break;
             case "evadown":
-               eability[enemy[k]][s][3] = 3;
-               eability[enemy[k]][s][4] = 7;
+               eability[enemies[k].enemy][s][3] = 3;
+               eability[enemies[k].enemy][s][4] = 7;
                 break;
             case "bind":
-               eability[enemy[k]][s][3] = 4;
-               eability[enemy[k]][s][4] = 1;
+               eability[enemies[k].enemy][s][3] = 4;
+               eability[enemies[k].enemy][s][4] = 1;
                 break;
             case "poison":
-               eability[enemy[k]][s][3] = 4;
-               eability[enemy[k]][s][4] = 2;
+               eability[enemies[k].enemy][s][3] = 4;
+               eability[enemies[k].enemy][s][4] = 2;
                 break;
             case "hpheal":
-               eability[enemy[k]][s][3] = 5;
-               eability[enemy[k]][s][4] = 1;
+               eability[enemies[k].enemy][s][3] = 5;
+               eability[enemies[k].enemy][s][4] = 1;
                 break;
             case "mpheal":
-               eability[enemy[k]][s][3] = 5;
-               eability[enemy[k]][s][4] = 2;
+               eability[enemies[k].enemy][s][3] = 5;
+               eability[enemies[k].enemy][s][4] = 2;
                 break;
             case "illheal":
-               eability[enemy[k]][s][3] = 5;
-               eability[enemy[k]][s][4] = 3;
+               eability[enemies[k].enemy][s][3] = 5;
+               eability[enemies[k].enemy][s][4] = 3;
                 break;
             default:
                 break;
@@ -1102,16 +1184,42 @@ public class BattleActivity extends AppCompatActivity {
     }
 
     public void resistset(int a){
-        String str[] = resist[a].split(",");
+        String str[] = person_data[a].getdataString("resist").split(",");
         for(int i=0;i<8;i++){
             resistnum[a][i] = Double.parseDouble(str[i]);
         }
     }
 
     public void Eresistset(int a){
-        String str[] = eresist[a].split(",");
+        //String str[] = enemies[a].resist.split(",");
+        String str[] = enemies[a].resist.split(",");
         for(int i=0;i<8;i++){
             resistnum[a+4][i] = Double.parseDouble(str[i]);
+        }
+    }
+    
+    public void battle_preparation(){
+        for(int s=0;s<4;s++){
+            person_data[s].setcharaset(commons.person_data[s].getcharaset());
+            person_data[s].setdataint("chara", commons.person_data[s].getdataint("chara"));
+            person_data[s].setdataString("viewname", commons.person_data[s].getdataString("viewname"));
+            person_data[s].setdataint("Lv", commons.person_data[s].getdataint("Lv"));
+            person_data[s].setdatadouble("atk", commons.person_data[s].getdatadouble("atk"));
+            person_data[s].setdatadouble("mtk", commons.person_data[s].getdatadouble("mtk"));
+            person_data[s].setdatadouble("def", commons.person_data[s].getdatadouble("def"));
+            person_data[s].setdatadouble("mef", commons.person_data[s].getdatadouble("mef"));
+            person_data[s].setdatadouble("spd", commons.person_data[s].getdatadouble("spd"));
+            person_data[s].setdatadouble("acc", commons.person_data[s].getdatadouble("acc"));
+            person_data[s].setdatadouble("eva", commons.person_data[s].getdatadouble("eva"));
+            person_data[s].setdataString("specialty", commons.person_data[s].getdataString("specialty"));
+            person_data[s].setdataString("resist", commons.person_data[s].getdataString("resist"));
+            person_data[s].remaining_HPwrite(commons.person_data_inbattle[s].HPMP_remaining_read("HP"));
+            person_data[s].remaining_MPwrite(commons.person_data_inbattle[s].HPMP_remaining_read("MP"));
+            person_data[s].MAX_HPwrite(commons.person_data_inbattle[s].HPMP_MAX_read("HP"));
+            person_data[s].MAX_MPwrite(commons.person_data_inbattle[s].HPMP_MAX_read("MP"));
+            charaset[s] = person_data[s].getcharaset();
+            viewname[s] = person_data[s].getdataString("viewname");
+            death[s] = commons.person_data_inbattle[s].getDeath();
         }
     }
 
@@ -1119,17 +1227,17 @@ public class BattleActivity extends AppCompatActivity {
         int i,j=0;
         int du[]=new int[4];
         for(i=0;i<Emeny;i++){
-            if(enemy[i]==a){
+            if(enemies[i].enemy==a){
                 du[j]=i;
                 j++;
             }
         }
         if(j>1){
             for(i=0;i<j;i++){
-                if(i==0)ename[du[i]] = ename[du[i]].concat("A");
-                if(i==1)ename[du[i]] = ename[du[i]].concat("B");
-                if(i==2)ename[du[i]] = ename[du[i]].concat("C");
-                if(i==3)ename[du[i]] = ename[du[i]].concat("D");
+                if(i==0)enemies[du[i]].name = enemies[du[i]].name.concat("A");
+                if(i==1)enemies[du[i]].name = enemies[du[i]].name.concat("B");
+                if(i==2)enemies[du[i]].name = enemies[du[i]].name.concat("C");
+                if(i==3)enemies[du[i]].name = enemies[du[i]].name.concat("D");
             }
         }
 
@@ -1194,7 +1302,7 @@ public class BattleActivity extends AppCompatActivity {
         next = c.moveToFirst();
         while (next) {
             num = c.getInt(0);
-            if (num == chara[v]) {
+            if (num == person_data[v].getdataint("chara")) {
                 iv.setImageBitmap(getImage(c.getBlob(1)));
                 break;
             }

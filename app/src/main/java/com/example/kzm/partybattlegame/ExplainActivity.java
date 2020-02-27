@@ -10,6 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class ExplainActivity extends AppCompatActivity {
 
     @Override
@@ -32,9 +36,45 @@ public class ExplainActivity extends AppCompatActivity {
         layout.addView(tv);
         Intent i = this.getIntent();
         int page = i.getIntExtra("page",1);
-        double plus = i.getDoubleExtra("plus",1.01);
-        double minus = i.getDoubleExtra("minus",0.99);
-        if(page==1){
+        InputStream is = null;
+        BufferedReader br = null;
+        String text = "";
+        String txtfile = "";
+        switch(page){
+            case 1:
+                txtfile = "charadata_explain.txt";
+                break;
+            case 2:
+                txtfile = "charagrowdata_explain.txt";
+                break;
+            case 3:
+                txtfile = "abilitydata_explain.txt";
+                break;
+            default:
+                txtfile = "charadata_explain.txt";
+                break;
+        }
+        try {
+            try {
+                is = this.getAssets().open(txtfile);
+                br = new BufferedReader(new InputStreamReader(is));
+
+                String str;
+                while ((str = br.readLine()) != null) {
+                    text += str + "\n";
+                }
+            } finally {
+                if (is != null) is.close();
+                if (br != null) br.close();
+            }
+        } catch (Exception e){
+            // エラー発生時の処理
+        }
+        tv = new TextView(this);
+        tv.setText(text);
+        tv.setGravity(Gravity.CENTER);
+        layout.addView(tv);
+        /*if(page==1){
             tv = new TextView(this);
             tv.setText("画像: アイコン用です。キャラセレクトやバトルで使います\n");
             layout.addView(tv);
@@ -126,6 +166,6 @@ public class ExplainActivity extends AppCompatActivity {
             tv = new TextView(this);
             tv.setText("属性: 技の属性です。炎、氷、雷、水、風、地、光、\n　　闇、無があります\n");
             layout.addView(tv);
-        }
+        }*/
     }
 }

@@ -24,13 +24,10 @@ public class RemoveActivity extends AppCompatActivity {
     MyOpenHelper hp;
     SQLiteDatabase db;
     Cursor c,c2;
-    ContentValues cv;
-    TextView tv,tv2;
+    TextView tv;
     Intent i;
-    EditText et;
     Button bt, bt2, bt3;
-    Spinner sp, sp3,sp4;
-    String name;
+    Spinner sp, sp3, sp4;
     String element[] = {"fire", "ice", "thunder", "water", "wind", "ground", "light", "dark", "normal"};
     ArrayList<String> mylist;
     ArrayAdapter<String> myadapter,elementadapter[]=new ArrayAdapter[10],adapter;
@@ -203,10 +200,6 @@ public class RemoveActivity extends AppCompatActivity {
             default:
                 return elementadapter[8];
         }
-    }
-
-    public int abilityidset(){
-        return hm2.get(sp3.getSelectedItem());
     }
 
 }

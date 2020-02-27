@@ -17,20 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class CharaSelect extends AppCompatActivity {
-    String name[]=new String[4],sname;
-    String viewname[]=new String[4],svn;
-    String specialty[]=new String[4], sst;
-    String resist[]=new String[4], sres;
-    int chara[]=new int[4],Lv[]=new int[4];
-    int exp[]=new int[4],explimit[]=new int[4];
-    int n,k,set=0,all=20,code;
-    int schara,sLv,sexp,sexplimit,maxdata=200;
-    double sHP,sMP,satk,smtk,sdef,smef,sspd,sacc,seva,expmul;
-    double HP[]=new double[4],MP[]=new double[4];
-    double atk[]=new double[4],mtk[]=new double[4];
-    double def[]=new double[4],mef[]=new double[4];
-    double spd[]=new double[4],acc[]=new double[4],eva[]=new double[4];
-    boolean charaset[]=new boolean[4], showdata=false, next,remove;
+    int n,k,set=0,all=20,code,maxdata=200;
+    String sname, svn, sst, sres;
+    int schara,sLv,sexp,sexplimit;
+    double sHP,sMP,satk,smtk,sdef,smef,sspd,sacc,seva;
+    boolean showdata=false, next, remove;
     TextView tv,tv2;
     Button bt,bt2,bt3,bt4;
     int countup[]=new int[maxdata];
@@ -44,6 +35,7 @@ public class CharaSelect extends AppCompatActivity {
     LinearLayout.LayoutParams params;
     private MainView myView;
     Commons commons;
+    Commons.person[] person_tmps = new Commons.person[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +54,15 @@ public class CharaSelect extends AppCompatActivity {
         bt2.setText("パーティー編入");
         bt3=findViewById(R.id.removebutton);
         bt3.setText("リセット");
-        for(k=0;k<4;k++)charaset[k]=false;
         i = this.getIntent();
         remove = i.getBooleanExtra("remove",false);
         commons = (Commons) getApplication();
         myView = findViewById(R.id.back2).findViewById(R.id.view);
         commons.backinit(myView);
         commons.makebutton();
+        for(k=0;k<4;k++){
+            person_tmps[k] = new Commons.person();
+        }
         allclean();
         Button bty =findViewById(R.id.back2).findViewById(R.id.battle);
         bty.setOnClickListener(commons.MM);
@@ -102,12 +96,15 @@ public class CharaSelect extends AppCompatActivity {
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(charaset[0]) {
+                if(person_tmps[0].getcharaset()) {
                     commons.setall(all);
-                    commons.datatransmission(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);
+                    datatransmission();
                     Toast.makeText(CharaSelect.this,
-                            "編成を決定しました！"
-                            +"\n"+viewname[0]+" "+viewname[1]+" "+viewname[2]+" "+viewname[3],
+                            "編成を決定しました！\n"
+                                    +Commons.person_data[0].getdataString("viewname")+" "
+                                    +Commons.person_data[1].getdataString("viewname")+" "
+                                    +Commons.person_data[2].getdataString("viewname")+" "
+                                    +Commons.person_data[3].getdataString("viewname"),
                             Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CharaSelect.this,
@@ -122,30 +119,33 @@ public class CharaSelect extends AppCompatActivity {
             public void onClick(View v) {
                 int check=0;
                 for(k=0;k<4;k++){
-                    if(chara[k]==schara) check=1;
+                    if(person_tmps[k].getdataint("chara")==schara) check=1;
                 }
                 if(set<4 && check==0) {
                     if(showdata){
-                        chara[set] = schara;
-                        name[set] = sname;
-                        viewname[set] = svn;
-                        Lv[set] = sLv;
-                        HP[set] = sHP;
-                        MP[set] = sMP;
-                        atk[set] = satk;
-                        mtk[set] = smtk;
-                        def[set] = sdef;
-                        mef[set] = smef;
-                        spd[set] = sspd;
-                        acc[set] = sacc;
-                        eva[set] = seva;
-                        exp[set] = sexp;
-                        specialty[set] = sst;
-                        resist[set] = sres;
-                        explimit[set] = sexplimit;
-                        charaset[set] = true;
+                        person_tmps[set].setdataint("chara", schara);
+                        person_tmps[set].setdataString("name", sname);
+                        person_tmps[set].setdataString("viewname", svn);
+                        person_tmps[set].setdataint("Lv", sLv);
+                        person_tmps[set].setdatadouble("HP", sHP);
+                        person_tmps[set].setdatadouble("MP", sMP);
+                        person_tmps[set].setdatadouble("atk", satk);
+                        person_tmps[set].setdatadouble("mtk", smtk);
+                        person_tmps[set].setdatadouble("def", sdef);
+                        person_tmps[set].setdatadouble("mef", smef);
+                        person_tmps[set].setdatadouble("spd", sspd);
+                        person_tmps[set].setdatadouble("acc", sacc);
+                        person_tmps[set].setdatadouble("eva", seva);
+                        person_tmps[set].setdataString("specialty", sst);
+                        person_tmps[set].setdataString("resist", sres);
+                        person_tmps[set].setdataint("exp", sexp);
+                        person_tmps[set].setdataint("explimit", sexplimit);
+                        person_tmps[set].setcharaset(true);
                         set++;
-                        tv2.setText("Party\n" + name[0] + "\n" + name[1] + "\n" + name[2] + "\n" + name[3]);
+                        tv2.setText("Party\n" + person_tmps[0].getdataString("name")
+                                + "\n" + person_tmps[1].getdataString("name")
+                                + "\n" + person_tmps[2].getdataString("name")
+                                + "\n" + person_tmps[3].getdataString("name"));
                         showdata=false;
                     }
                 }
@@ -163,15 +163,36 @@ public class CharaSelect extends AppCompatActivity {
     View.OnClickListener content = new View.OnClickListener() {
         public void onClick(View view) {
             n = ((ViewGroup) view.getParent()).indexOfChild((View)view)+1;
-            dataset(countup[n],set);
+            dataset(countup[n]);
             dataview();
             showdata=true;
         }
     };
 
+    public void datatransmission(){
+        for(int s=0;s<4;s++){
+            commons.person_data[s].setcharaset(person_tmps[s].getcharaset());
+            commons.person_data[s].setdataint("chara", person_tmps[s].getdataint("chara"));
+            commons.person_data[s].setdataString("name", person_tmps[s].getdataString("name"));
+            commons.person_data[s].setdataString("viewname", person_tmps[s].getdataString("viewname"));
+            commons.person_data[s].setdataint("Lv", person_tmps[s].getdataint("Lv"));
+            commons.person_data[s].setdatadouble("HP", person_tmps[s].getdatadouble("HP"));
+            commons.person_data[s].setdatadouble("MP", person_tmps[s].getdatadouble("MP"));
+            commons.person_data[s].setdatadouble("atk", person_tmps[s].getdatadouble("atk"));
+            commons.person_data[s].setdatadouble("mtk", person_tmps[s].getdatadouble("mtk"));
+            commons.person_data[s].setdatadouble("def", person_tmps[s].getdatadouble("def"));
+            commons.person_data[s].setdatadouble("mef", person_tmps[s].getdatadouble("mef"));
+            commons.person_data[s].setdatadouble("spd", person_tmps[s].getdatadouble("spd"));
+            commons.person_data[s].setdatadouble("acc", person_tmps[s].getdatadouble("acc"));
+            commons.person_data[s].setdatadouble("eva", person_tmps[s].getdatadouble("eva"));
+            commons.person_data[s].setdataString("specialty", person_tmps[s].getdataString("specialty"));
+            commons.person_data[s].setdataString("resist", person_tmps[s].getdataString("resist"));
+            commons.person_data[s].setdataint("exp", person_tmps[s].getdataint("exp"));
+            commons.person_data[s].setdataint("explimit", person_tmps[s].getdataint("explimit"));
+        }
+    }
 
-    public void dataset(int n,int set){
-        if(set<4) {
+    public void dataset(int n){
             c = db.query("person", new String[]{"code", "name", "nameview", "Lv", "HP", "MP", "ATK", "MTK", "DEF", "MEF", "SPD", "ACC", "EVA", "specialty", "resist", "EXP", "EXPlimit"}, null, null, null, null, null);
             next = c.moveToFirst();
             while (next) {
@@ -197,7 +218,6 @@ public class CharaSelect extends AppCompatActivity {
                 }
                 next = c.moveToNext();
             }
-        }
     }
 
     public void dataview(){
@@ -207,24 +227,24 @@ public class CharaSelect extends AppCompatActivity {
 
     public void allclean(){
         for(k=0;k<4;k++){
-            charaset[k]=false;
-            chara[k]=-1;
-            name[k]="";
-            viewname[k] = "";
-            Lv[k] = 0;
-            HP[k] = 0;
-            MP[k] = 0;
-            atk[k] = 0;
-            mtk[k] = 0;
-            def[k] = 0;
-            mef[k] = 0;
-            spd[k] = 0;
-            acc[k] = 0;
-            eva[k] = 0;
-            specialty[k] = "";
-            resist[k] = "";
-            exp[k] = 0;
-            explimit[k] = 1;
+            person_tmps[k].setdataint("chara", -1);
+            person_tmps[k].setdataString("name", "");
+            person_tmps[k].setdataString("viewname", "");
+            person_tmps[k].setdataint("Lv", 0);
+            person_tmps[k].setdatadouble("HP", 0);
+            person_tmps[k].setdatadouble("MP", 0);
+            person_tmps[k].setdatadouble("atk", 0);
+            person_tmps[k].setdatadouble("mtk", 0);
+            person_tmps[k].setdatadouble("def", 0);
+            person_tmps[k].setdatadouble("mef", 0);
+            person_tmps[k].setdatadouble("spd", 0);
+            person_tmps[k].setdatadouble("acc", 0);
+            person_tmps[k].setdatadouble("eva", 0);
+            person_tmps[k].setdataString("specialty", "");
+            person_tmps[k].setdataString("resist", "");
+            person_tmps[k].setdataint("exp", 0);
+            person_tmps[k].setdataint("explimit", 1);
+            person_tmps[k].setcharaset(false);
         }
         set=0;
         tv2.setText("");

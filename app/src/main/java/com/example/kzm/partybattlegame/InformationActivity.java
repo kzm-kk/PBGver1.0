@@ -34,11 +34,9 @@ public class InformationActivity extends AppCompatActivity {
         });
         try {
             try {
-                // assetsフォルダ内の sample.txt をオープンする
                 is = this.getAssets().open("info.txt");
                 br = new BufferedReader(new InputStreamReader(is));
 
-                // １行ずつ読み込み、改行を付加する
                 String str;
                 while ((str = br.readLine()) != null) {
                     text += str + "\n";
