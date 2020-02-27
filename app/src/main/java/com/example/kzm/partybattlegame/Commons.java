@@ -23,30 +23,226 @@ public class Commons extends Application{
     MoveMain MM;
     MoveChara MC;
     MoveAdd MA;
+    static class person{
+        private int chara, Lv, exp, explimit;
+        private double HP, MP, atk, mtk, def, mef, spd, acc, eva;
+        private boolean charaset;
+        private String name, viewname, specialty, resist;
+        public person(){
+            this.charaset = false;
+            this.chara = 0;
+            this.name = "";
+            this.viewname = "";
+            this.specialty = "";
+            this.resist = "";
+        }
+        public int getdataint(String str){
+            switch (str){
+                case "chara":
+                    return this.chara;
+                case "Lv":
+                    return this.Lv;
+                case "exp":
+                    return this.exp;
+                case "explimit":
+                    return this.explimit;
+                default://基本使わない
+                    return 1;
+            }
+        }
+
+        public double getdatadouble(String str){
+            switch (str){
+                case "HP":
+                    return this.HP;
+                case "MP":
+                    return this.MP;
+                case "atk":
+                    return this.atk;
+                case "mtk":
+                    return this.mtk;
+                case "def":
+                    return this.def;
+                case "mef":
+                    return this.mef;
+                case "spd":
+                    return this.spd;
+                case "acc":
+                    return this.acc;
+                case "eva":
+                    return this.eva;
+                default://基本使わない
+                    return 1.0;
+            }
+        }
+
+        public String getdataString(String str){
+            switch (str){
+                case "name":
+                    return this.name;
+                case "viewname":
+                    return this.viewname;
+                case "specialty":
+                    return this.specialty;
+                case "resist":
+                    return this.resist;
+                default://基本使わない
+                    return " ";
+            }
+        }
+
+        public boolean getcharaset(){
+            return this.charaset;
+        }
+
+        public void setdataint(String str, int data){
+            switch (str){
+                case "chara":
+                    this.chara = data;
+                    break;
+                case "Lv":
+                    this.Lv = data;
+                    break;
+                case "exp":
+                    this.exp = data;
+                    break;
+                case "explimit":
+                    this.explimit = data;
+                    break;
+                default://基本使わない
+                    break;
+            }
+        }
+
+        public void setdatadouble(String str, double data){
+            switch (str){
+                case "HP":
+                    this.HP = data;
+                    break;
+                case "MP":
+                    this.MP = data;
+                    break;
+                case "atk":
+                    this.atk = data;
+                    break;
+                case "mtk":
+                    this.mtk = data;
+                    break;
+                case "def":
+                    this.def = data;
+                    break;
+                case "mef":
+                    this.mef = data;
+                    break;
+                case "spd":
+                    this.spd = data;
+                    break;
+                case "acc":
+                    this.acc = data;
+                    break;
+                case "eva":
+                    this.eva = data;
+                    break;
+                default://基本使わない
+                    break;
+            }
+        }
+
+        public void setdataString(String str, String data){
+            switch (str){
+                case "name":
+                    this.name = data;
+                    break;
+                case "viewname":
+                    this.viewname = data;
+                    break;
+                case "specialty":
+                    this.specialty = data;
+                    break;
+                case "resist":
+                    this.resist = data;
+                    break;
+                default://基本使わない
+                    break;
+            }
+        }
+
+        public void setcharaset(boolean charaset){
+            this.charaset = charaset;
+        }
+
+    }
+    static person[] person_data = new person[4];
+
+    static class person_inbattle extends person{
+        private int HPremain, MPremain, HPMAX, MPMAX;
+        private boolean death;
+        public person_inbattle(){
+            this.HPremain = 0;
+            this.MPremain = 0;
+            this.HPMAX = 0;
+            this.MPMAX = 0;
+            this.death = true;
+        }
+
+        public void MAX_HPwrite(double HP){
+            this.HPMAX = (int)HP;
+        }
+
+        public void MAX_MPwrite(double MP){
+            this.MPMAX = (int)MP;
+        }
+
+        public int HPMP_MAX_read(String str){
+            if(str.equals("HP")) {
+                return this.HPMAX;
+            } else if(str.equals("HP")){
+                return this.MPMAX;
+            } else {
+                return 1;
+            }
+        }
+
+        public void remaining_HPwrite(int nowHP){
+            this.HPremain = nowHP;
+        }
+
+        public void remaining_MPwrite(int nowMP){
+            this.MPremain = nowMP;
+        }
+
+        public int HPMP_remaining_read(String str){
+            if(str.equals("HP")) {
+                return this.HPremain;
+            } else if(str.equals("MP")){
+                return this.MPremain;
+            } else {
+                return 1;
+            }
+        }
+
+        public boolean getDeath(){
+            return this.death;
+        }
+
+        public void setDeath(boolean death){
+            this.death = death;
+        }
+
+    }
+    static person_inbattle[] person_data_inbattle = new person_inbattle[4];
 
     @Override
     public void onCreate(){
         super.onCreate();
+        init();
+    }
+
+    public void init(){
         all=0;
         for(int s=0;s<4;s++){
-            Commons.chara[s]=0;
-            Commons.name[s]="";
-            Commons.viewname[s]="";
-            Commons.Lv[s]=0;
-            Commons.HP[s]=0;
-            Commons.MP[s]=0;
-            Commons.atk[s]=0;
-            Commons.mtk[s]=0;
-            Commons.def[s]=0;
-            Commons.mef[s]=0;
-            Commons.spd[s]=0;
-            Commons.acc[s]=0;
-            Commons.eva[s]=0;
-            Commons.specialty[s]="";
-            Commons.resist[s]="";
-            Commons.exp[s]=0;
-            Commons.explimit[s]=1;
-            Commons.charaset[s]=false;
+            person_data[s] = new person();
+            person_data_inbattle[s] = new person_inbattle();
         }
     }
 
@@ -81,9 +277,9 @@ public class Commons extends Application{
     //全データ受信
     //chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset
     public void datareception
-     (int a[],String b[],String c[],int d[],double e[],double f[],
-      double g[],double h[],double i[],double j[],double k[],double l[],double m[],
-      String n[],String o[],int p[],int q[],boolean r[]){
+    (int a[],String b[],String c[],int d[],double e[],double f[],
+     double g[],double h[],double i[],double j[],double k[],double l[],double m[],
+     String n[],String o[],int p[],int q[],boolean r[]){
         for(int s=0;s<4;s++){
             a[s]=Commons.chara[s];
             b[s]=Commons.name[s];

@@ -24,8 +24,6 @@ public class AddAbility extends AppCompatActivity {
     EditText et[] = new EditText[9];
     Button bt, bt2, bt3;
     Spinner sp, sp2, sp3, sp4;
-    String name;
-    int code;
 
 
     @Override

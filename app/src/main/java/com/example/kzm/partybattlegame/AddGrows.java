@@ -26,12 +26,10 @@ public class AddGrows extends AppCompatActivity {
     int all, code, Lv,HP,MP,explimit;
     double atk,mtk,def,mef,spd,acc,eva;
     double pHP,pMP,patk,pmtk,pdef,pmef,pspd,pacc,peva;
-    double cor[]={1,1,1,1,1,1,1,1,1};
-    double pcor=1.1,mcor=0.9;
+    double grows[] = {1,1,1,1,1,1,1,1,1};
     String fullname,viewname,specialty,plus,minus,resist;
     Spinner sp,sp2;
     EditText et[]=new EditText[9];
-    SpannableStringBuilder sb[] = new SpannableStringBuilder[12];
     byte[] image;
 
     @Override
@@ -92,8 +90,6 @@ public class AddGrows extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 i = new Intent(AddGrows.this, ExplainActivity.class);
-                i.putExtra("plus",pcor);
-                i.putExtra("minus",mcor);
                 i.putExtra("page",2);
                 startActivity(i);
             }
@@ -203,78 +199,52 @@ public class AddGrows extends AppCompatActivity {
         }
     }
 
+
+
+
+
     public void statusup(){
-        datacor(plus,minus);
-        HP=(int)((double)HP+pHP*(Lv-1)*cor[0]);
-        MP=(int)((double)MP+pMP*(Lv-1)*cor[1]);
-        atk=atk+patk*(Lv-1)*cor[2];
-        mtk=mtk+pmtk*(Lv-1)*cor[3];
-        def=def+pdef*(Lv-1)*cor[4];
-        mef=mef+pmef*(Lv-1)*cor[5];
-        spd=spd+pspd*(Lv-1)*cor[6];
-        acc=acc+pacc*(Lv-1)*cor[7];
-        eva=eva+peva*(Lv-1)*cor[8];
+        datacorretion(plus, 1.1);
+        datacorretion(minus, 0.9);
+        HP=(int)((double)HP+pHP*(Lv-1)*grows[0]);
+        MP=(int)((double)MP+pMP*(Lv-1)*grows[1]);
+        atk=atk+patk*(Lv-1)*grows[2];
+        mtk=mtk+pmtk*(Lv-1)*grows[3];
+        def=def+pdef*(Lv-1)*grows[4];
+        mef=mef+pmef*(Lv-1)*grows[5];
+        spd=spd+pspd*(Lv-1)*grows[6];
+        acc=acc+pacc*(Lv-1)*grows[7];
+        eva=eva+peva*(Lv-1)*grows[8];
     }
 
-    public void datacor(String plus,String minus){
-        switch (plus){
+    public void datacorretion(String corretion, double parameter){
+        switch (corretion){
             case "HP":
-                cor[0] = pcor;
+                grows[0] *= parameter;
                 break;
             case "MP":
-                cor[1] = pcor;
+                grows[1] *= parameter;
                 break;
             case "ATK":
-                cor[2] = pcor;
+                grows[2] *= parameter;
                 break;
             case "MTK":
-                cor[3] = pcor;
+                grows[3] *= parameter;
                 break;
             case "DEF":
-                cor[4] = pcor;
+                grows[4] *= parameter;
                 break;
             case "MEF":
-                cor[5] = pcor;
+                grows[5] *= parameter;
                 break;
             case "SPD":
-                cor[6] = pcor;
+                grows[6] *= parameter;
                 break;
             case "ACC":
-                cor[7] = pcor;
+                grows[7] *= parameter;
                 break;
             case "EVA":
-                cor[8] = pcor;
-                break;
-            default:
-                break;
-        }
-        switch (minus){
-            case "HP":
-                cor[0] = mcor;
-                break;
-            case "MP":
-                cor[1] = mcor;
-                break;
-            case "ATK":
-                cor[2] = mcor;
-                break;
-            case "MTK":
-                cor[3] = mcor;
-                break;
-            case "DEF":
-                cor[4] = mcor;
-                break;
-            case "MEF":
-                cor[5] = mcor;
-                break;
-            case "SPD":
-                cor[6] = mcor;
-                break;
-            case "ACC":
-                cor[7] = mcor;
-                break;
-            case "EVA":
-                cor[8] = mcor;
+                grows[8] *= parameter;
                 break;
             default:
                 break;

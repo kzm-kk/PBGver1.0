@@ -22,18 +22,9 @@ import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends AppCompatActivity {
     String codename[]=new String[1], message,plus,minus;
-    String name[]=new String[4],viewname[]=new String[4];
-    String specialty[]=new String[4],resist[]=new String[4];
-    int lock=1,maxlock=1,stage;
-    int chara[]=new int[4],Lv[]=new int[4];
-    int HPMAX[]=new int[4],MPMAX[]=new int[4];
-    int exp[]=new int[4],explimit[]=new int[4];
-    int n,k,plv=1,explus=0,expin,all;
-    double HP[]=new double[4],MP[]=new double[4];
-    double atk[]=new double[4],mtk[]=new double[4];
-    double def[]=new double[4],mef[]=new double[4];
-    double spd[]=new double[4],acc[]=new double[4],eva[]=new double[4];
-    double pHP,pMP,patk,pmtk,pdef,pmef,pspd,pacc,peva,expchange,expmul=1.2;
+    int lock=1,maxlock=1,stage,n,k,plv=1,explus=0,all;
+    double expchange,expmul=1.2;
+    double grows[] = {1,1,1,1,1,1,1,1,1};
     boolean charaset[]={false,false,false,false},next;
     TextView tv,tv2,tv3;
     Button bt,bt2,bt3,bt4,bt5;
@@ -50,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private MainView myView;
     Commons commons;
     AlertDialog alertDialog;
+    Commons.person[] person_shows = new Commons.person[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +50,22 @@ public class MainActivity extends AppCompatActivity {
         hp = new MyOpenHelper(this);
         db = hp.getWritableDatabase();
         commons = (Commons) getApplication();
+        for (k = 0; k < 4; k++) {
+            person_shows[k] = new Commons.person();
+        }
         if(AppLaunchChecker.hasStartedFromLauncher(this)){
             c = db.query("lastplay", new String[]{"one", "two", "three", "four", "level","chara"}, null, null, null, null, null);
             next = c.moveToFirst();
             while (next) {
-                chara[0] = c.getInt(0);
-                chara[1] = c.getInt(1);
-                chara[2] = c.getInt(2);
-                chara[3] = c.getInt(3);
+                person_shows[0].setdataint("chara", c.getInt(0));
+                person_shows[1].setdataint("chara", c.getInt(1));
+                person_shows[2].setdataint("chara", c.getInt(2));
+                person_shows[3].setdataint("chara", c.getInt(3));
                 maxlock = c.getInt(4);
                 all = c.getInt(5);
                 next = c.moveToNext();
             }
             for (k = 0; k < 4; k++) {
-                charaset[k]=false;
                 lastdataset(k);
             }
             c.close();
@@ -86,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
             setimage();
             all = 20;
             for(k=0;k<4;k++){
-                chara[k]=-1*(k+1);
-                charaset[k]=false;
+                person_shows[k].setdataint("chara", -1*(k+1));
             }
             message="『キャラ色々』ボタンを押して\nパーティーを編成してください";
         }
@@ -109,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
         bt.setText("バトル開始");
         bt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if(commons.charaset[0])commons.datareception(chara, name, viewname, Lv, HP, MP, atk, mtk, def, mef, spd, acc, eva, specialty, resist, exp, explimit, charaset);
-                if(charaset[0]) {
+                dataload();
+                if(person_shows[0].getcharaset()) {
                     lock = sp.getSelectedItemPosition();
                     if(maxlock<lock) {
                         Toast.makeText(MainActivity.this,
@@ -135,17 +128,22 @@ public class MainActivity extends AppCompatActivity {
         bt2.setText("セーブ");
         bt2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if(commons.charaset[0])tv2.setText("ok "+commons.chara[0]+" "+chara[0]);
+                dataload();
+                save();
+                if(person_shows[0].getcharaset())
+                    tv2.setText("ok "+person_shows[0].getdataint("chara")+" "+person_shows[1].getdataint("chara")+" "
+                            +person_shows[2].getdataint("chara")+" "+person_shows[3].getdataint("chara")+" ");
+
             }
         });
         bt3 = (Button) findViewById(R.id.statusbutton);
         bt3.setText("ステータス");
         bt3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if(commons.charaset[0])commons.datareception(chara, name, viewname, Lv, HP, MP, atk, mtk, def, mef, spd, acc, eva, specialty, resist, exp, explimit, charaset);
+                dataload();
                 layout.removeAllViews();
                 Hlayout.removeAllViews();
-                if(charaset[0]==false) {
+                if(!person_shows[0].getcharaset()) {
                     tv3 = new TextView(MainActivity.this);
                     tv3.setText("パーティーがセットされていません");
                     tv3.setGravity(Gravity.CENTER);
@@ -156,12 +154,21 @@ public class MainActivity extends AppCompatActivity {
                     tv3.setGravity(Gravity.CENTER);
                     Hlayout.addView(tv3);
                     for(k=0;k<4;k++) {
-                        if(charaset[k]){
+                        if(person_shows[k].getcharaset()){
                             tv3 = new TextView(MainActivity.this);
-                            tv3.setText(viewname[k] + "\nLv" + Lv[k] +"\nHP:" + (int)HP[k] + "\nMP:" + (int)MP[k]
-                                    + "\n攻撃:" + (int)atk[k] + "\n魔攻:" + (int)mtk[k] + "\n防御:" + (int)def[k]
-                                    + "\n魔防:" + (int)mef[k] + "\n速さ:" + (int)spd[k] + "\n命中:" + (int)acc[k]
-                                    + "\n回避:" + (int)eva[k] + "\nEXP " + exp[k] + "/" + explimit[k]);
+                            tv3.setText(person_shows[k].getdataString("viewname")
+                                    + "\nLv" + person_shows[k].getdataint("Lv")
+                                    + "\nHP:" + (int)person_shows[k].getdatadouble("HP")
+                                    + "\nMP:" + (int)person_shows[k].getdatadouble("MP")
+                                    + "\n攻撃:" + (int)person_shows[k].getdatadouble("atk")
+                                    + "\n魔攻:" + (int)person_shows[k].getdatadouble("mtk")
+                                    + "\n防御:" + (int)person_shows[k].getdatadouble("def")
+                                    + "\n魔防:" + (int)person_shows[k].getdatadouble("mef")
+                                    + "\n速さ:" + (int)person_shows[k].getdatadouble("spd")
+                                    + "\n命中:" + (int)person_shows[k].getdatadouble("acc")
+                                    + "\n回避:" + (int)person_shows[k].getdatadouble("eva")
+                                    + "\nEXP " + person_shows[k].getdataint("exp")
+                                    + "/" + person_shows[k].getdataint("explimit"));
                             tv3.setGravity(Gravity.CENTER);
                             Hlayout.addView(tv3);
                         }
@@ -185,13 +192,15 @@ public class MainActivity extends AppCompatActivity {
         maxlock = Math.max(maxlock,intent.getIntExtra("level", 1));
         commons.setmaxlock(maxlock);
         tv.setText("レベルセレクト 現在の最高レベル:"+maxlock);
-        tv2.setText("");
         charaset = intent.getBooleanArrayExtra("set");
         explus = intent.getIntExtra("explus", 0);
+        tv2.setText("");
         boolean battle = intent.getBooleanExtra("battle",false);
-        if(battle)levelup();
+        if(battle){
+            levelup(explus);
+            datawrite();
+        }
         if(intent.getBooleanExtra("movemain",false)){
-            commons.datareception(chara, name, viewname, Lv, HP, MP, atk, mtk, def, mef, spd, acc, eva, specialty, resist, exp, explimit, charaset);
             all = commons.getall();
         }
         save();
@@ -199,8 +208,8 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onResume(){
         super.onResume();
-        if(charaset[0]) save();
-        //commons.datareception(chara, name, viewname, Lv, HP, MP, atk, mtk, def, mef, spd, acc, eva, specialty, resist, exp, explimit, charaset);
+        //dataload();
+        if(person_shows[0].getcharaset()) save();
     }
 
     protected void onPause(){
@@ -208,113 +217,194 @@ public class MainActivity extends AppCompatActivity {
         commons.setmaxlock(maxlock);
         commons.setexpmul(expmul);
         commons.setall(all);
-        commons.datatransmission(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);
         layout.removeAllViews();
         Hlayout.removeAllViews();
+        save();
     }
 
     public void setintentdata(){
         for(k=0;k<4;k++){
-            if(charaset[k]) {
-                HPMAX[k] = (int) HP[k];
-                MPMAX[k] = (int) MP[k];
+            if(person_shows[k].getcharaset()) {
+                Commons.person_data_inbattle[k].MAX_HPwrite(person_shows[k].getdatadouble("HP"));
+                Commons.person_data_inbattle[k].MAX_MPwrite(person_shows[k].getdatadouble("MP"));
+                Commons.person_data_inbattle[k].remaining_HPwrite((int)person_shows[k].getdatadouble("HP"));
+                Commons.person_data_inbattle[k].remaining_MPwrite((int)person_shows[k].getdatadouble("MP"));
+                Commons.person_data_inbattle[k].setDeath(false);
+            } else {
+                Commons.person_data_inbattle[k].setDeath(true);
             }
         }
         i.putExtra("level",lock);
         i.putExtra("stage",stage);
-        i.putExtra("set",charaset);
-        i.putExtra("chara",chara);
-        i.putExtra("viewname",viewname);
-        i.putExtra("Lv",Lv);
-        i.putExtra("HP", HPMAX);
-        i.putExtra("HPMAX",HPMAX);
-        i.putExtra("MP", MPMAX);
-        i.putExtra("MPMAX",MPMAX);
-        i.putExtra("ATK",atk);
-        i.putExtra("MTK",mtk);
-        i.putExtra("DEF",def);
-        i.putExtra("MEF",mef);
-        i.putExtra("SPD",spd);
-        i.putExtra("ACC",acc);
-        i.putExtra("EVA",eva);
-        i.putExtra("resist",resist);
-        i.putExtra("specialty",specialty);
         i.putExtra("explus",0);
     }
 
     public void save(){
         for(k=0;k<4;k++) {
             cv = new ContentValues();
-            codename[0] = name[k];
-            cv.put("Lv", Lv[k]);
-            cv.put("HP", HP[k]);
-            cv.put("MP", MP[k]);
-            cv.put("ATK", atk[k]);
-            cv.put("MTK", mtk[k]);
-            cv.put("DEF", def[k]);
-            cv.put("MEF", mef[k]);
-            cv.put("SPD", spd[k]);
-            cv.put("ACC", acc[k]);
-            cv.put("EVA", eva[k]);
-            cv.put("EXP", exp[k]);
-            cv.put("EXPlimit", explimit[k]);
+            codename[0] = person_shows[k].getdataString("name");
+            cv.put("Lv", person_shows[k].getdataint("Lv"));
+            cv.put("HP", person_shows[k].getdatadouble("HP"));
+            cv.put("MP", person_shows[k].getdatadouble("MP"));
+            cv.put("ATK", person_shows[k].getdatadouble("atk"));
+            cv.put("MTK", person_shows[k].getdatadouble("mtk"));
+            cv.put("DEF", person_shows[k].getdatadouble("def"));
+            cv.put("MEF", person_shows[k].getdatadouble("mef"));
+            cv.put("SPD", person_shows[k].getdatadouble("spd"));
+            cv.put("ACC", person_shows[k].getdatadouble("acc"));
+            cv.put("EVA", person_shows[k].getdatadouble("eva"));
+            cv.put("EXP", person_shows[k].getdataint("exp"));
+            cv.put("EXPlimit", person_shows[k].getdataint("explimit"));
             db.update("person", cv, "name = ?", codename);
         }
         cv = new ContentValues();
-        cv.put("one", chara[0]);
-        cv.put("two", chara[1]);
-        cv.put("three", chara[2]);
-        cv.put("four", chara[3]);
+        cv.put("one", person_shows[0].getdataint("chara"));
+        cv.put("two", person_shows[1].getdataint("chara"));
+        cv.put("three", person_shows[2].getdataint("chara"));
+        cv.put("four", person_shows[3].getdataint("chara"));
         cv.put("level", maxlock);
         cv.put("chara",all);
         db.update("lastplay", cv, "",null);
     }
 
-
-    public void levelup(){
+    public void levelup(int explus){
         for(k=0;k<4;k++) {
-            if (charaset[k]) {
-                plv = Lv[k];
-                expin = explus;
-                while (expin != 0) {
-                    exp[k]++;
-                    if (exp[k] >= explimit[k]) {
-                        exp[k] = exp[k] - explimit[k];
-                        expchange = (double) explimit[k] * expmul;
-                        explimit[k] = (int) expchange;
-                        statustable(k);
-                        datapluscor();
-                        dataminuscor();
-                        statusup(k);
-                    }
-                    expin--;
+            int Lv = person_shows[k].getdataint("Lv");
+            int exp = person_shows[k].getdataint("exp");
+            int explimit = person_shows[k].getdataint("explimit");
+            if (person_shows[k].getcharaset()) {
+                plv = Lv;
+                exp += explus;
+                while(exp >= explimit){
+                    exp -= explimit;
+                    expchange = (double) explimit * expmul;
+                    explimit = (int) expchange;
+                    Lv++;
                 }
-                if (Lv[k] > plv) {
+                if (Lv > plv) {
+                    statustable(k);
+                    datacorretion(plus, 1.1);
+                    datacorretion(minus, 0.9);
+                    statusup(k, Lv - plv);
                     tv3 = new TextView(this);
-                    tv3.setText("Level UP!!\n" + name[k] + " Lv" + plv + "→" + Lv[k]);
+                    tv3.setText("Level UP!!\n" + person_shows[k].getdataString("name")
+                            + " Lv" + plv + "→" + Lv);
                     layout.addView(tv3);
                     tv3.setGravity(Gravity.CENTER);
                 }
             }
+            person_shows[k].setdataint("Lv", Lv);
+            person_shows[k].setdataint("exp", exp);
+            person_shows[k].setdataint("explimit", explimit);
         }
-        commons.datatransmission(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);
     }
 
-    public void statustable(int s) {
+    public void statusup(int num, int lvup){
+        String parameters[] = {"HP", "MP", "atk", "mtk", "def", "mef", "spd", "acc", "eva"};
+        for(int s=0;s<9;s++){
+            double predata = person_shows[num].getdatadouble(parameters[s]);
+            predata = predata + grows[s] * lvup;
+            person_shows[num].setdatadouble(parameters[s], predata);
+        }
+    }
+
+    public void dataload(){
+        if(!commons.person_data[0].getcharaset()) datawrite();
+        for(int s=0;s<4;s++){
+            person_shows[s].setcharaset(commons.person_data[s].getcharaset());
+            person_shows[s].setdataint("chara", commons.person_data[s].getdataint("chara"));
+            person_shows[s].setdataString("name", commons.person_data[s].getdataString("name"));
+            person_shows[s].setdataString("viewname", commons.person_data[s].getdataString("viewname"));
+            person_shows[s].setdataint("Lv", commons.person_data[s].getdataint("Lv"));
+            person_shows[s].setdatadouble("HP", commons.person_data[s].getdatadouble("HP"));
+            person_shows[s].setdatadouble("MP", commons.person_data[s].getdatadouble("MP"));
+            person_shows[s].setdatadouble("atk", commons.person_data[s].getdatadouble("atk"));
+            person_shows[s].setdatadouble("mtk", commons.person_data[s].getdatadouble("mtk"));
+            person_shows[s].setdatadouble("def", commons.person_data[s].getdatadouble("def"));
+            person_shows[s].setdatadouble("mef", commons.person_data[s].getdatadouble("mef"));
+            person_shows[s].setdatadouble("spd", commons.person_data[s].getdatadouble("spd"));
+            person_shows[s].setdatadouble("acc", commons.person_data[s].getdatadouble("acc"));
+            person_shows[s].setdatadouble("eva", commons.person_data[s].getdatadouble("eva"));
+            person_shows[s].setdataString("specialty", commons.person_data[s].getdataString("specialty"));
+            person_shows[s].setdataString("resist", commons.person_data[s].getdataString("resist"));
+            person_shows[s].setdataint("exp", commons.person_data[s].getdataint("exp"));
+            person_shows[s].setdataint("explimit", commons.person_data[s].getdataint("explimit"));
+        }
+    }
+
+    public void datawrite(){
+        for(int s=0;s<4;s++){
+            commons.person_data[s].setcharaset(person_shows[s].getcharaset());
+            commons.person_data[s].setdataint("chara", person_shows[s].getdataint("chara"));
+            commons.person_data[s].setdataString("name", person_shows[s].getdataString("name"));
+            commons.person_data[s].setdataString("viewname", person_shows[s].getdataString("viewname"));
+            commons.person_data[s].setdataint("Lv", person_shows[s].getdataint("Lv"));
+            commons.person_data[s].setdatadouble("HP", person_shows[s].getdatadouble("HP"));
+            commons.person_data[s].setdatadouble("MP", person_shows[s].getdatadouble("MP"));
+            commons.person_data[s].setdatadouble("atk", person_shows[s].getdatadouble("atk"));
+            commons.person_data[s].setdatadouble("mtk", person_shows[s].getdatadouble("mtk"));
+            commons.person_data[s].setdatadouble("def", person_shows[s].getdatadouble("def"));
+            commons.person_data[s].setdatadouble("mef", person_shows[s].getdatadouble("mef"));
+            commons.person_data[s].setdatadouble("spd", person_shows[s].getdatadouble("spd"));
+            commons.person_data[s].setdatadouble("acc", person_shows[s].getdatadouble("acc"));
+            commons.person_data[s].setdatadouble("eva", person_shows[s].getdatadouble("eva"));
+            commons.person_data[s].setdataString("specialty", person_shows[s].getdataString("specialty"));
+            commons.person_data[s].setdataString("resist", person_shows[s].getdataString("resist"));
+            commons.person_data[s].setdataint("exp", person_shows[s].getdataint("exp"));
+            commons.person_data[s].setdataint("explimit", person_shows[s].getdataint("explimit"));
+        }
+    }
+
+
+    public void datacorretion(String corretion, double parameter){
+        switch (corretion){
+            case "HP":
+                grows[0] *= parameter;
+                break;
+            case "MP":
+                grows[1] *= parameter;
+                break;
+            case "ATK":
+                grows[2] *= parameter;
+                break;
+            case "MTK":
+                grows[3] *= parameter;
+                break;
+            case "DEF":
+                grows[4] *= parameter;
+                break;
+            case "MEF":
+                grows[5] *= parameter;
+                break;
+            case "SPD":
+                grows[6] *= parameter;
+                break;
+            case "ACC":
+                grows[7] *= parameter;
+                break;
+            case "EVA":
+                grows[8] *= parameter;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void statustable(int tmp) {
         c = db.query("growtable", new String[]{"code", "HP", "MP", "ATK", "MTK", "DEF", "MEF", "SPD", "ACC", "EVA", "plus", "minus"}, null, null, null, null, null);
         next = c.moveToFirst();
         while (next) {
             n = c.getInt(0);
-            if (chara[s] == n) {
-                pHP = c.getDouble(1);
-                pMP = c.getDouble(2);
-                patk = c.getDouble(3);
-                pmtk = c.getDouble(4);
-                pdef = c.getDouble(5);
-                pmef = c.getDouble(6);
-                pspd = c.getDouble(7);
-                pacc = c.getDouble(8);
-                peva = c.getDouble(9);
+            if (person_shows[tmp].getdataint("chara") == n) {
+                grows[0] = c.getDouble(1);
+                grows[1] = c.getDouble(2);
+                grows[2] = c.getDouble(3);
+                grows[3] = c.getDouble(4);
+                grows[4] = c.getDouble(5);
+                grows[5] = c.getDouble(6);
+                grows[6] = c.getDouble(7);
+                grows[7] = c.getDouble(8);
+                grows[8] = c.getDouble(9);
                 plus = c.getString(10);
                 minus = c.getString(11);
                 break;
@@ -324,119 +414,35 @@ public class MainActivity extends AppCompatActivity {
         c.close();
     }
 
-    public void statusup(int s){
-        Lv[s]++;
-        HP[s]=HP[s]+pHP;
-        MP[s]=MP[s]+pMP;
-        atk[s]=atk[s]+patk;
-        mtk[s]=mtk[s]+pmtk;
-        def[s]=def[s]+pdef;
-        mef[s]=mef[s]+pmef;
-        spd[s]=spd[s]+pspd;
-        acc[s]=acc[s]+pacc;
-        eva[s]=eva[s]+peva;
-    }
-
-    public void datapluscor(){
-        double cor=1.1;
-        switch (plus){
-            case "HP":
-                pHP=pHP*cor;
-                break;
-            case "MP":
-                pMP=pMP*cor;
-                break;
-            case "ATK":
-                patk=patk*cor;
-                break;
-            case "MTK":
-                pmtk=pmtk*cor;
-                break;
-            case "DEF":
-                pdef=pdef*cor;
-                break;
-            case "MEF":
-                pdef=pdef*cor;
-                break;
-            case "SPD":
-                pspd=pspd*cor;
-                break;
-            case "ACC":
-                pacc=pacc*cor;
-                break;
-            case "EVA":
-                peva=peva*cor;
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void dataminuscor(){
-        double cor=0.9;
-        switch (minus){
-            case "HP":
-                pHP=pHP*cor;
-                break;
-            case "MP":
-                pMP=pMP*cor;
-                break;
-            case "ATK":
-                patk=patk*cor;
-                break;
-            case "MTK":
-                pmtk=pmtk*cor;
-                break;
-            case "DEF":
-                pdef=pdef*cor;
-                break;
-            case "MEF":
-                pdef=pdef*cor;
-                break;
-            case "SPD":
-                pspd=pspd*cor;
-                break;
-            case "ACC":
-                pacc=pacc*cor;
-                break;
-            case "EVA":
-                peva=peva*cor;
-                break;
-            default:
-                break;
-        }
-    }
-
     public void lastdataset(int tmp){
         c = db.query("person", new String[]{"code", "name", "nameview", "Lv", "HP", "MP", "ATK", "MTK", "DEF", "MEF", "SPD", "ACC", "EVA", "specialty", "resist", "EXP", "EXPlimit"}, null, null, null, null, null);
         boolean next = c.moveToFirst();
         while (next) {
             n = c.getInt(0);
-            if (chara[tmp] == n) {
-                name[tmp] = c.getString(1);
-                viewname[tmp] = c.getString(2);
-                Lv[tmp] = c.getInt(3);
-                HP[tmp] = c.getDouble(4);
-                MP[tmp] = c.getDouble(5);
-                atk[tmp] = c.getDouble(6);
-                mtk[tmp] = c.getDouble(7);
-                def[tmp] = c.getDouble(8);
-                mef[tmp] = c.getDouble(9);
-                spd[tmp] = c.getDouble(10);
-                acc[tmp] = c.getDouble(11);
-                eva[tmp] = c.getDouble(12);
-                specialty[tmp] = c.getString(13);
-                resist[tmp] = c.getString(14);
-                exp[tmp] = c.getInt(15);
-                explimit[tmp] = c.getInt(16);
-                charaset[tmp] = true;
+            if (person_shows[tmp].getdataint("chara") == n) {
+                person_shows[tmp].setdataString("name", c.getString(1));
+                person_shows[tmp].setdataString("viewname", c.getString(2));
+                person_shows[tmp].setdataint("Lv", c.getInt(3));
+                person_shows[tmp].setdatadouble("HP", c.getDouble(4));
+                person_shows[tmp].setdatadouble("MP", c.getDouble(5));
+                person_shows[tmp].setdatadouble("atk", c.getDouble(6));
+                person_shows[tmp].setdatadouble("mtk", c.getDouble(7));
+                person_shows[tmp].setdatadouble("def", c.getDouble(8));
+                person_shows[tmp].setdatadouble("mef", c.getDouble(9));
+                person_shows[tmp].setdatadouble("spd", c.getDouble(10));
+                person_shows[tmp].setdatadouble("acc", c.getDouble(11));
+                person_shows[tmp].setdatadouble("eva", c.getDouble(12));
+                person_shows[tmp].setdataString("specialty", c.getString(13));
+                person_shows[tmp].setdataString("resist", c.getString(14));
+                person_shows[tmp].setdataint("exp", c.getInt(15));
+                person_shows[tmp].setdataint("explimit", c.getInt(16));
+                person_shows[tmp].setcharaset(true);
                 break;
             }
             next = c.moveToNext();
         }
         c.close();
     }
-
     public void setmydata(){//resist '0,0,0,0,0,0,0,0' 火　氷　雷　水　風　地　光　闇
         db.execSQL("INSERT INTO person(code,name,nameview,Lv,HP,MP,ATK,MTK,DEF,MEF,SPD,ACC,EVA,specialty,resist,EXP,EXPlimit) VALUES(1,'エース・フォンバレン','エース',1,280,21,19,14,17,16,14,12,13,'SD','1,-1,0,0,0,0,0,0',0,27)");
         db.execSQL("INSERT INTO person(code,name,nameview,Lv,HP,MP,ATK,MTK,DEF,MEF,SPD,ACC,EVA,specialty,resist,EXP,EXPlimit) VALUES(2,'デュオ・スパクラーヴァ','デュオ',1,257,17,16,10,14,14,18,13,20,'SD','-1,1,0,0,0,0,0,0',0,27)");
@@ -1106,6 +1112,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onDestroy(){
         super.onDestroy();
+        save();
         db.close();
     }
 
