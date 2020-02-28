@@ -102,23 +102,6 @@ public class OptionActivity extends AppCompatActivity {
                     }
                     i.putExtra("level",100);
                     i.putExtra("stage",6);
-                    /*i.putExtra("set",charaset);
-                    i.putExtra("chara",chara);
-                    i.putExtra("viewname",viewname);
-                    i.putExtra("Lv",Lv);
-                    i.putExtra("HP", HPMAX);
-                    i.putExtra("HPMAX",HPMAX);
-                    i.putExtra("MP", MPMAX);
-                    i.putExtra("MPMAX",MPMAX);
-                    i.putExtra("ATK",atk);
-                    i.putExtra("MTK",mtk);
-                    i.putExtra("DEF",def);
-                    i.putExtra("MEF",mef);
-                    i.putExtra("SPD",spd);
-                    i.putExtra("ACC",acc);
-                    i.putExtra("EVA",eva);
-                    i.putExtra("specialty",specialty);
-                    i.putExtra("resist",resist);*/
                     startActivity(i);
                 } else if(!person_shows_op[0].getcharaset()){
                     layout.removeAllViews();
