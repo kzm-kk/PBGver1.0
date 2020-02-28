@@ -328,7 +328,27 @@ public class DBhandling extends AppCompatActivity {
             }
         }
         c.close();
-        commons.datatransmission(chara,name,viewname,Lv,HP,MP,atk,mtk,def,mef,spd,acc,eva,specialty,resist,exp,explimit,charaset);
+        for(int s=0;s<4;s++){
+            commons.person_data[s].setcharaset(charaset[s]);
+            commons.person_data[s].setdataint("chara", chara[s]);
+            commons.person_data[s].setdataString("name", name[s]);
+            commons.person_data[s].setdataString("viewname", viewname[s]);
+            commons.person_data[s].setdataint("Lv", Lv[s]);
+            commons.person_data[s].setdatadouble("HP", HP[s]);
+            commons.person_data[s].setdatadouble("MP", MP[s]);
+            commons.person_data[s].setdatadouble("atk", atk[s]);
+            commons.person_data[s].setdatadouble("mtk", mtk[s]);
+            commons.person_data[s].setdatadouble("def", def[s]);
+            commons.person_data[s].setdatadouble("mef", mef[s]);
+            commons.person_data[s].setdatadouble("spd", spd[s]);
+            commons.person_data[s].setdatadouble("acc", acc[s]);
+            commons.person_data[s].setdatadouble("eva", eva[s]);
+            commons.person_data[s].setdataString("specialty", specialty[s]);
+            commons.person_data[s].setdataString("resist", resist[s]);
+            commons.person_data[s].setdataint("exp", exp[s]);
+            commons.person_data[s].setdataint("explimit", explimit[s]);
+        }
     }
+
 
 }
