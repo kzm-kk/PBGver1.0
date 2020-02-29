@@ -22,13 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BattleActivity" />
         <activity android:name=".CharaSelect" />
         <activity android:name=".Continue" />
         <activity android:name=".AttackContents" />
         <activity android:name=".AddCharacter" />
         <activity android:name=".AddGrows" />
-        <activity android:name=".ExplainActivity" />
         <activity android:name=".Two_Choices" />
         <activity android:name=".AddAbility" />
         <activity android:name=".OptionActivity" />
@@ -38,13 +36,15 @@
         <activity android:name=".RemoveActivity" />
         <activity android:name=".AdditionsActivity" />
         <activity android:name=".InformationActivity" />
+        <activity android:name=".DBhandling" />
+        <activity android:name=".BattleActivity" />
+        <activity android:name=".ExplainActivity" />
+
 
         <provider
             android:name=".MyContentProvider"
             android:authorities="com.example.kzm.PartyBattleGame.status"
             android:exported="true"></provider>
-
-        <activity android:name=".DBhandling"></activity>
     </application>
 
 </manifest>

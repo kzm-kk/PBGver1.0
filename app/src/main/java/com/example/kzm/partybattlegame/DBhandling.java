@@ -41,7 +41,7 @@ public class DBhandling extends AppCompatActivity {
     File sd_dir;
     String sd_stt;
     String db_file;
-    String filename = "PBGdata.db";
+    String filename = "PBGdata.csv";//db";
     private static String[] PERMISSION_READ_EXTERNAL_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE};
     private static String[] PERMISSION_WRITE_EXTERNAL_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     SQLiteDatabase db;
@@ -165,11 +165,9 @@ public class DBhandling extends AppCompatActivity {
     }
 
     private void startExternalAppSelectableDB() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 
-        // Filter to only show results that can be "opened", such as a
-        // file (as opposed to a list of contacts or timezones)
-        String mime = "*/*";//"application/vnd.sqlite3";
+        String mime = "text/comma-separated-values";
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType(mime);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

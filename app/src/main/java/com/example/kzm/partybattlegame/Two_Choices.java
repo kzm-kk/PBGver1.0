@@ -30,7 +30,6 @@ public class Two_Choices extends AppCompatActivity {
         commons.setall(all);
         tv.setText("『続ける』ボタンで引き続きキャラを作成します\n『終わる』ボタンでパーティー編成画面に戻ります");
         bt.setText("続ける");
-        bt.setEnabled(false);
         bt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 i = new Intent(Two_Choices.this, AddCharacter.class);

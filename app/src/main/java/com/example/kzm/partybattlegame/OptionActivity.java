@@ -131,6 +131,7 @@ public class OptionActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        bt5.setEnabled(false);
         Button bty =findViewById(R.id.back4).findViewById(R.id.battle);
         bty.setOnClickListener(commons.MM);
         Button btx =findViewById(R.id.back4).findViewById(R.id.characters);

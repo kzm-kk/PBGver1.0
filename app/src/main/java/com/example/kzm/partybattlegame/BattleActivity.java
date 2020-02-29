@@ -1,5 +1,6 @@
 package com.example.kzm.partybattlegame;
 
+import android.annotation.SuppressLint;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.database.Cursor;
@@ -63,127 +64,6 @@ public class BattleActivity extends AppCompatActivity {
             this.resist = "";
             this.enemyset = false;
         }
-
-        public int getdataint(String str){
-            switch (str){
-                case "enemy":
-                    return this.enemy;
-                case "HP":
-                    return this.HP;
-                case "MP":
-                    return this.MP;
-                case "HPMAX":
-                    return this.HPMAX;
-                case "MPMAX":
-                    return this.MPMAX;
-                default://基本使わない
-                    return 1;
-            }
-        }
-
-        public double getdatadouble(String str){
-            switch (str){
-                case "atk":
-                    return this.atk;
-                case "mtk":
-                    return this.mtk;
-                case "def":
-                    return this.def;
-                case "mef":
-                    return this.mef;
-                case "spd":
-                    return this.spd;
-                case "acc":
-                    return this.acc;
-                case "eva":
-                    return this.eva;
-                default://基本使わない
-                    return 1.0;
-            }
-        }
-
-        public String getdataString(String str){
-            switch (str){
-                case "name":
-                    return this.name;
-                case "resist":
-                    return this.resist;
-                default://基本使わない
-                    return " ";
-            }
-        }
-
-        public boolean getenemyset(){
-            return this.enemyset;
-        }
-
-        public void setdataint(String str, int data){
-            switch (str){
-                case "enemy":
-                    this.enemy = data;
-                    break;
-                case "HP":
-                    this.HP = data;
-                    break;
-                case "MP":
-                    this.MP = data;
-                    break;
-                case "HPMAX":
-                    this.HPMAX = data;
-                    break;
-                case "MPMAX":
-                    this.MPMAX = data;
-                    break;
-                default://基本使わない
-                    break;
-            }
-        }
-
-        public void setdatadouble(String str, double data){
-            switch (str){
-                case "atk":
-                    this.atk = data;
-                    break;
-                case "mtk":
-                    this.mtk = data;
-                    break;
-                case "def":
-                    this.def = data;
-                    break;
-                case "mef":
-                    this.mef = data;
-                    break;
-                case "spd":
-                    this.spd = data;
-                    break;
-                case "acc":
-                    this.acc = data;
-                    break;
-                case "eva":
-                    this.eva = data;
-                    break;
-                default://基本使わない
-                    break;
-            }
-        }
-
-        public void setdataString(String str, String data){
-            switch (str){
-                case "name":
-                    this.name = data;
-                    break;
-                case "resist":
-                    this.resist = data;
-                    break;
-                default://基本使わない
-                    break;
-            }
-        }
-
-        public void setenemyset(boolean enemyset){
-            this.enemyset = enemyset;
-        }
-
     }
     enemydata[] enemies = new enemydata[4];
 
@@ -302,6 +182,7 @@ public class BattleActivity extends AppCompatActivity {
                     }
                 } else {
                     i = new Intent(BattleActivity.this, MainActivity.class);
+                    explus = 0;
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     i.putExtra("battle",true);
