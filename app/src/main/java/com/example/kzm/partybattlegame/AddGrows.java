@@ -23,10 +23,9 @@ public class AddGrows extends AppCompatActivity {
     ContentValues cv;
     TextView tv;
     Intent i;
-    int all, code, Lv,HP,MP,explimit;
-    double atk,mtk,def,mef,spd,acc,eva;
+    int all, code, Lv, explimit;
+    double HP,MP,atk,mtk,def,mef,spd,acc,eva;
     double pHP,pMP,patk,pmtk,pdef,pmef,pspd,pacc,peva;
-    double grows[] = {1,1,1,1,1,1,1,1,1};
     String fullname,viewname,specialty,plus,minus,resist;
     Spinner sp,sp2;
     EditText et[]=new EditText[9];
@@ -54,8 +53,8 @@ public class AddGrows extends AppCompatActivity {
         fullname = i.getStringExtra("fullname");
         viewname = i.getStringExtra("viewname");
         Lv = i.getIntExtra("Lv",1);
-        HP = i.getIntExtra("HP",250);
-        MP = i.getIntExtra("MP",20);
+        HP = i.getDoubleExtra("HP",250);
+        MP = i.getDoubleExtra("MP",20);
         atk = i.getDoubleExtra("ATK",15);
         mtk = i.getDoubleExtra("MTK",15);
         def = i.getDoubleExtra("DEF",15);
@@ -111,7 +110,6 @@ public class AddGrows extends AppCompatActivity {
                 peva = Double.parseDouble(((SpannableStringBuilder) et[8].getText()).toString());
                 plus = plusandminsset(sp.getSelectedItemPosition());
                 minus = plusandminsset(sp2.getSelectedItemPosition());
-                statusup();
                 if(!plus.equals(minus))complete();
                 else {
                     Toast.makeText(AddGrows.this,
@@ -163,9 +161,6 @@ public class AddGrows extends AppCompatActivity {
         cv = new ContentValues();
         cv.put("chara", all);
         db.update("lastplay", cv, null, null);
-        /*i = new Intent(AddGrows.this, CharaSelect.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);*/
         i = new Intent(AddGrows.this, Two_Choices.class);
         i.putExtra("allchara", all);
         Toast.makeText(AddGrows.this,
@@ -196,58 +191,6 @@ public class AddGrows extends AppCompatActivity {
                 return "EVA";
             default:
                 return "HP";
-        }
-    }
-
-
-
-
-
-    public void statusup(){
-        datacorretion(plus, 1.1);
-        datacorretion(minus, 0.9);
-        HP=(int)((double)HP+pHP*(Lv-1)*grows[0]);
-        MP=(int)((double)MP+pMP*(Lv-1)*grows[1]);
-        atk=atk+patk*(Lv-1)*grows[2];
-        mtk=mtk+pmtk*(Lv-1)*grows[3];
-        def=def+pdef*(Lv-1)*grows[4];
-        mef=mef+pmef*(Lv-1)*grows[5];
-        spd=spd+pspd*(Lv-1)*grows[6];
-        acc=acc+pacc*(Lv-1)*grows[7];
-        eva=eva+peva*(Lv-1)*grows[8];
-    }
-
-    public void datacorretion(String corretion, double parameter){
-        switch (corretion){
-            case "HP":
-                grows[0] *= parameter;
-                break;
-            case "MP":
-                grows[1] *= parameter;
-                break;
-            case "ATK":
-                grows[2] *= parameter;
-                break;
-            case "MTK":
-                grows[3] *= parameter;
-                break;
-            case "DEF":
-                grows[4] *= parameter;
-                break;
-            case "MEF":
-                grows[5] *= parameter;
-                break;
-            case "SPD":
-                grows[6] *= parameter;
-                break;
-            case "ACC":
-                grows[7] *= parameter;
-                break;
-            case "EVA":
-                grows[8] *= parameter;
-                break;
-            default:
-                break;
         }
     }
 
